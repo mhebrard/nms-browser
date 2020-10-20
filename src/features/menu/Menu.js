@@ -1,32 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { showGalaxy, showRegion } from './menuSlice';
-import styles from './Menu.css';
+import { getRegion, setRegion } from './menuSlice';
+import styles from './Menu.module.css';
+
+import REGIONS from '../../data/regions'
+import { changeRegion } from '../../chains/changeRegion'
 
 export function Menu() {
-  // const count = useSelector(selectCount);
-  const dispatch = useDispatch();
-  // const [incrementAmount, setIncrementAmount] = useState('2');
+  const region = useSelector(getRegion)
+  const dispatch = useDispatch()
 
   return (
     <div>
-      <div className={styles.row}>
-        <button
-          className={styles.button}
-          aria-label="Galaxy"
-          onClick={() => dispatch(showGalaxy())}
-        >
-          Galaxy
-        </button>
-        <span> / </span>
-        <button
-          className={styles.button}
-          aria-label="Region"
-          onClick={() => dispatch(showRegion())}
-        >
-          Region
-        </button>
-      </div>
+      <select
+        name='region'
+        value={region}
+        onChange={e => dispatch(changeRegion(e.target.value))}
+      >
+        <option value=''>--Select--</option>
+        {Object.keys(REGIONS).map(k => {
+          return <option key={k} value={k}>{k}</option>
+        })}
+      </select>
     </div>
-  );
+  )
 }
