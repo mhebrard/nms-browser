@@ -42,6 +42,9 @@ export function Scene() {
       graphData={graphData}
       nodeThreeObject={n => objectHandler(n, {category, scale})}
       enableNodeDrag={false}
+      linkVisibility={false}
+      onNodeClick={n => onClickHandler(n, ref)}
+      // onNodeHover={n => onHoverHandler(n, ref)}
     />
   }
 
@@ -74,6 +77,20 @@ function objectHandler(n, p) {
   obj.add(sprite);
 
   return obj;
+}
+
+// Three: onClick
+function onClickHandler(n, ref) {
+  console.log('click', n)
+  // Aim at node from outside it
+  const distance = 40;
+  const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
+
+  ref.current.cameraPosition(
+    { x: n.x * distRatio, y: n.y * distRatio, z: n.z * distRatio }, // new position
+    n, // lookAt ({ x, y, z })
+    3000  // ms transition duration
+  );
 }
 
     // Three: onHover
