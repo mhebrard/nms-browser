@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import {useRef, useEffect} from 'react'
 import { useSelector } from 'react-redux';
 
 import { getNodes, getLinks, getCategory, getScale } from './sceneSlice'
@@ -18,10 +19,26 @@ export function Scene() {
     nodes: nodes.map(e => { return {...e} }),
     links: links.map(e => { return {...e} })
   }
-  return <ForceGraph3D
-    graphData={graphData}
-    nodeThreeObject={n => objectHandler(n, {category, scale})}
-  />
+
+  // Bloom Pass
+  const Graph = () => {
+    const ref = useRef();
+    useEffect(() => {
+      const bloomPass = new THREE.UnrealBloomPass();
+      bloomPass.strength = 3;
+      bloomPass.radius = 1;
+      bloomPass.threshold = 0.1;
+      ref.current.postProcessingComposer().addPass(bloomPass);
+    },[])
+
+    return <ForceGraph3D
+      ref={ref}
+      graphData={graphData}
+      nodeThreeObject={n => objectHandler(n, {category, scale})}
+    />
+  }
+
+  return <Graph/>
 }
 
 // Three: Object
