@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { getNodes, getLinks, getCategory, getScale } from './sceneSlice'
 import ForceGraph3D from 'react-force-graph-3d'
 import { COLORS } from '../../data/categories'
-import { circle } from '../../data/assets'
+import { circle, reticule } from '../../data/assets'
 import * as THREE from '../../three-bundle'
 
 export function Scene() {
@@ -35,6 +35,9 @@ export function Scene() {
       // fgRef.current.d3Force('collision', d3.forceCollide(node => Math.sqrt(100 / (node.level + 1))));
       // Graph.d3Force('link').distance(d => d.distance)
       ref.current.d3Force('link').distance(n => n.distance);
+
+      // Add
+      ref.current.scene().add(reticule)
     },[])
 
     return <ForceGraph3D
@@ -43,8 +46,9 @@ export function Scene() {
       nodeThreeObject={n => objectHandler(n, {category, scale})}
       enableNodeDrag={false}
       linkVisibility={false}
+      // nodeLabel={n => labelHandler(n)}
       onNodeClick={n => onClickHandler(n, ref)}
-      // onNodeHover={n => onHoverHandler(n, ref)}
+      onNodeHover={n => onHoverHandler(n, ref)}
     />
   }
 
@@ -83,7 +87,7 @@ function objectHandler(n, p) {
 function onClickHandler(n, ref) {
   console.log('click', n)
   // Aim at node from outside it
-  const distance = 40;
+  const distance = 120;
   const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
 
   ref.current.cameraPosition(
@@ -92,6 +96,26 @@ function onClickHandler(n, ref) {
     3000  // ms transition duration
   );
 }
+
+// Three: onHover
+function onHoverHandler(n, ref) {
+  // return document.querySelector('#chart').style.cursor = n ? 'pointer' : null
+  if (n) {
+    reticule.position.set(n.x,n.y,n.z) // new position
+    reticule.lookAt(ref.current.camera().position) // LookAt
+  }
+}
+
+// function labelHandler(n) {
+//   // SSI, Original Name, PC Name, Star Type, Star Color, Race	Economy	Trade	Sell	Buy	Wealth	Wealth Rate	Conflict	Conflict Rate	Planets	Moons	Discovered by	Date	Dist. to Center	Coordinates	Glyphs	Position
+//   return `
+//     <div class='tronbox'>
+//       ${n['PC Name']}<br/>
+//       ${n['Star Type']}<br/>
+//       ${n['Race']}
+//     </div>
+//   `
+// }
 
     // Three: onHover
     // function onHoverHandler(n) {

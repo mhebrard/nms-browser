@@ -1,6 +1,8 @@
 export {
+  FrontSide,
   Mesh,
   MeshBasicMaterial,
+  RingGeometry,
   SphereGeometry,
   Sprite,
   SpriteMaterial,
