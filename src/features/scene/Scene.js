@@ -20,21 +20,28 @@ export function Scene() {
     links: links.map(e => { return {...e} })
   }
 
-  // Bloom Pass
+  // Effects
   const Graph = () => {
     const ref = useRef();
     useEffect(() => {
+      // Bloom pass
       const bloomPass = new THREE.UnrealBloomPass();
       bloomPass.strength = 3;
       bloomPass.radius = 1;
       bloomPass.threshold = 0.1;
       ref.current.postProcessingComposer().addPass(bloomPass);
+
+      // Force distance
+      // fgRef.current.d3Force('collision', d3.forceCollide(node => Math.sqrt(100 / (node.level + 1))));
+      // Graph.d3Force('link').distance(d => d.distance)
+      ref.current.d3Force('link').distance(n => n.distance);
     },[])
 
     return <ForceGraph3D
       ref={ref}
       graphData={graphData}
       nodeThreeObject={n => objectHandler(n, {category, scale})}
+      enableNodeDrag={false}
     />
   }
 

@@ -8,7 +8,7 @@ export const sceneSlice = createSlice({
   name: 'scene',
   initialState: {
     nodes: [{id:'a', 'Star Color':  'yellow'}, {id:'b', 'Star Color': 'red'}],
-    links: [{source:'a', target:'b'}],
+    links: [{source:'a', target:'b', distance: 20}],
     category: CATEGORIES.star,
     scale: 10
   },
