@@ -12,7 +12,8 @@
     "react-dom": "^16.13.1",
     "react-force-graph-3d": "^1.18.8",
     "react-redux": "^7.2.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "three": "^0.121.1"
   },
   "scripts": {
     "start": "react-scripts start",
