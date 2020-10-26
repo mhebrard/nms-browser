@@ -1,3 +1,19 @@
+# NMS Browser
+
+Goal: Display No Man's Sky regions in 3D and navigate through star systems
+
+## Steps
+
+* Menu display a dropdown to select region. the list of region come from a constant. the selected region name is store in the state.
+
+* User select a region
+  > menu.region is updated
+  > load data
+  > create graph obj
+  > display Threejs scene
+
+## React
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
 ## Available Scripts
