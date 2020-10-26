@@ -7,7 +7,7 @@ import * as d3 from '../../d3-bundle';
 export const sceneSlice = createSlice({
   name: 'scene',
   initialState: {
-    nodes: [{id:'a', 'Star Color':  'yellow'}, {id:'b', 'Star Color': 'red'}],
+    nodes: [{id:'a', 'PC Name': 'a', 'Star Color':  'yellow'}, {id:'b', 'PC Name': 'b', 'Star Color': 'red'}],
     links: [{source:'a', target:'b', distance: 20}],
     category: CATEGORIES.star,
     scale: 10

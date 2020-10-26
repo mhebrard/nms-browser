@@ -37,7 +37,7 @@ export function Scene() {
       ref.current.d3Force('link').distance(n => n.distance);
 
       // Add
-      ref.current.scene().add(reticule)
+      // ref.current.scene().add(reticule)
     },[])
 
     return <ForceGraph3D
@@ -46,9 +46,9 @@ export function Scene() {
       nodeThreeObject={n => objectHandler(n, {category, scale})}
       enableNodeDrag={false}
       linkVisibility={false}
-      // nodeLabel={n => labelHandler(n)}
+      nodeLabel={n => n['PC Name'] ? n['PC Name'] : n['Original Name']}
       onNodeClick={n => onClickHandler(n, ref)}
-      onNodeHover={n => onHoverHandler(n, ref)}
+      // onNodeHover={n => onHoverHandler(n, ref)}
     />
   }
 
