@@ -1,15 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 // import { Counter } from './features/counter/Counter';
-import {Menu} from './features/menu/Menu';
-import {Scene} from './features/scene/Scene';
+import { Menu } from './features/menu/Menu';
+import { Scene } from './features/scene/Scene';
+import { Tooltip } from './features/tooltip/Tooltip';
 import './App.css';
+
 
 function App() {
   return (
     <div className="App">
-      <Menu />
       <Scene />
+      <Menu />
+      <Tooltip />
       {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />

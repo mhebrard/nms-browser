@@ -2,15 +2,13 @@
 
 Goal: Display No Man's Sky regions in 3D and navigate through star systems
 
-## Steps
+## Datasource
 
-* Menu display a dropdown to select region. the list of region come from a constant. the selected region name is store in the state.
+Data are sourced from google spreadsheets.
 
-* User select a region
-  > menu.region is updated
-  > load data
-  > create graph obj
-  > display Threejs scene
+1. Create a spreadsheet with the structure:
+  `SSI, Original Name, PC Name, PS4 Name, XBOX Name, Star Class, Star Color, Race, Economy, Economy Tier, Sell, Buy, Wealth, Wealth Tier, Conflict, Conflict Tier, Planets, Moons, Discovered by, Date, Distance Center, Coordinates, Glyphs`
+2. Fill data
 
 ## React
 

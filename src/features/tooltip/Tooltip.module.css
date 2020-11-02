@@ -1,0 +1,20 @@
+.abs {
+  position: absolute;
+  top:0;
+  left:0;
+}
+.content {
+  background-color: rgba(0,0,0,0.7);
+  padding: 5px;
+  z-index: 2;
+}
+.tronbox {
+  border-radius: 3px;
+  border: 1px #80EAFF solid;
+  box-shadow: 0 0 3px #22AFCA, inset 0 0 3px #22AFCA;
+}
+
+h1 {
+  color: white;
+  padding: 5px;
+}
