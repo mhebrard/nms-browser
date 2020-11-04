@@ -2,15 +2,37 @@
 
 Goal: Display No Man's Sky regions in 3D and navigate through star systems
 
-## Steps
+## Datasource
 
-* Menu display a dropdown to select region. the list of region come from a constant. the selected region name is store in the state.
+Data are sourced from google spreadsheets.
 
-* User select a region
-  > menu.region is updated
-  > load data
-  > create graph obj
-  > display Threejs scene
+1. Create a spreadsheet with the structure:
+  `SSI, Original Name, PC Name, PS4 Name, XBOX Name, Star Class, Star Color, Race, Economy, Economy Tier, Sell, Buy, Wealth, Wealth Tier, Conflict, Conflict Tier, Planets, Moons, Discovered by, Date, Distance Center, Coordinates, Glyphs`
+2. rename the tab as "Catalogue"
+3. Fill data
+4. Share spreadsheet
+  a. Click on "File/Publish on the Web"
+  b. Select the tab "Catalogue"
+  c. Select "Tab-separated value (.tsv)
+  d. Click on "Publish"
+  e. Copy the link
+  f. Create a new region entry in `/src/data/regions.js`
+5. Create a new tab "Distances" with the structure:
+  `Star system A, SSI A, Star system B, SSI B, Distance (LY)`
+6. Fill data
+7. Share spreadsheet
+
+## Deploy on github
+
+1. Install gh-page package
+`npm i gh-pages`
+2. Add homepage to `package.json`
+`"homepage" : "https://mhebrard.github.io/nms-browser"`
+3. Add scripts to `package.json`
+`"predeploy": "npm run build",`
+`"deploy": "gh-pages -d build",`
+4. Deploy app:
+`npm run deploy`
 
 ## React
 

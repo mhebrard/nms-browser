@@ -11,7 +11,7 @@ export function Menu() {
   const dispatch = useDispatch()
 
   return (
-    <div>
+    <div className={[styles.abs, styles.region].join(" ")}>
       <select
         name='region'
         value={region}
