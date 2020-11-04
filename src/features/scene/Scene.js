@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { getNodes, getLinks, getCategory, getScale } from './sceneSlice'
 import styles from './Scene.module.css';
-import { setVisibility, setPosition } from '../tooltip/tooltipSlices'
+import { setVisibility, setPosition, setNode } from '../tooltip/tooltipSlices'
 import ForceGraph3D from 'react-force-graph-3d'
 import { COLORS } from '../../data/categories'
 import { circle, reticule } from '../../data/assets'
@@ -22,6 +22,59 @@ export function Scene() {
   const graphData = {
     nodes: nodes.map(e => { return {...e} }),
     links: links.map(e => { return {...e} })
+  }
+
+  //Handlers
+
+  function objectHandler(n) {
+    // use a sphere as a drag handle
+    const obj = new THREE.Mesh(
+        new THREE.SphereGeometry(7),
+        new THREE.MeshBasicMaterial({
+          depthWrite: false,
+          transparent: true,
+          opacity: 0
+        })
+      );
+  
+    // add img sprite as child
+    const material = new THREE.SpriteMaterial(
+      { 
+        color: COLORS[n[category]],
+        map: circle
+      }
+    );
+    const sprite = new THREE.Sprite(material);
+    sprite.scale.set(scale, scale);
+    obj.add(sprite);
+  
+    return obj;
+  }
+
+  function onClickHandler(n, ref) {
+    // Aim at node from outside it
+    const distance = 120;
+    const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
+  
+    ref.current.cameraPosition(
+      { x: n.x * distRatio, y: n.y * distRatio, z: n.z * distRatio }, // new position
+      n, // lookAt ({ x, y, z })
+      3000  // ms transition duration
+    );
+  }
+
+  function onHoverHandler(n, ref) {
+    if (n) {
+      const vector = new Vector3(n.x,n.y,n.z)
+      const canvas = ref.current.renderer().domElement
+      vector.project(ref.current.camera())
+      vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
+      vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
+      dispatch(setPosition({x:vector.x, y:vector.y}))
+
+      dispatch(setNode(nodes.filter(f => f['SSI'] == n['SSI'])[0]))
+    }
+    dispatch(setVisibility( n ? true : false))  
   }
 
   // Effects
@@ -45,68 +98,16 @@ export function Scene() {
     return <ForceGraph3D
       ref={ref}
       graphData={graphData}
-      nodeThreeObject={n => objectHandler(n, {category, scale})}
+      nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
-      linkVisibility={false}
-      nodeLabel={n => n['PC Name'] ? n['PC Name'] : n['Original Name']}
-      onNodeClick={(n, e) => onClickHandler(n, e, ref)}
-      onNodeHover={n => onHoverHandler(n, ref, dispatch)}
+      linkVisibility={true}
+      // nodeLabel={n => n['PC Name'] ? n['PC Name'] : n['Original Name']}
+      onNodeClick={n => onClickHandler(n, ref)}
+      onNodeHover={n => onHoverHandler(n, ref)}
     />
   }
 
   return <Graph/>
-}
-
-// Three: Object
-function objectHandler(n, p) {
-  // use a sphere as a drag handle
-  const obj = new THREE.Mesh(
-      new THREE.SphereGeometry(7),
-      new THREE.MeshBasicMaterial({
-        depthWrite: false,
-        transparent: true,
-        opacity: 0
-      })
-    );
-
-  // add img sprite as child
-  const material = new THREE.SpriteMaterial(
-    { 
-      color: COLORS[n[p.category]],
-      map: circle
-    }
-  );
-  const sprite = new THREE.Sprite(material);
-  sprite.scale.set(p.scale, p.scale);
-  obj.add(sprite);
-
-  return obj;
-}
-
-// Three: onClick
-function onClickHandler(n, e, ref) {
-  // Aim at node from outside it
-  const distance = 120;
-  const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
-
-  ref.current.cameraPosition(
-    { x: n.x * distRatio, y: n.y * distRatio, z: n.z * distRatio }, // new position
-    n, // lookAt ({ x, y, z })
-    3000  // ms transition duration
-  );
-}
-
-// Three: onHover
-function onHoverHandler(n, ref, dispatch) {
-  if (n) {
-    const vector = new Vector3(n.x,n.y,n.z)
-    const canvas = ref.current.renderer().domElement
-    vector.project(ref.current.camera())
-    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
-    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
-    dispatch(setPosition({x:vector.x, y:vector.y}))
-  }
-  dispatch(setVisibility( n ? true : false))  
 }
 
 export default Scene

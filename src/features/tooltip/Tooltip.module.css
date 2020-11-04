@@ -4,8 +4,10 @@
   left:0;
 }
 .content {
+  color:white;
   background-color: rgba(0,0,0,0.7);
   padding: 5px;
+  pointer-events: none;
   z-index: 2;
 }
 .tronbox {
@@ -13,8 +15,25 @@
   border: 1px #80EAFF solid;
   box-shadow: 0 0 3px #22AFCA, inset 0 0 3px #22AFCA;
 }
-
-h1 {
-  color: white;
-  padding: 5px;
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.img{
+  max-width: 50px;
+  max-height: 50px;
+}
+.badge {
+  position: relative;
+  bottom: 25px;
+}
+.bold {
+  font-weight: bold;
 }
