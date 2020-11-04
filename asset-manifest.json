@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/nms-browser/static/css/main.ff37a50f.chunk.css",
+    "main.js": "/nms-browser/static/js/main.9c11b7a6.chunk.js",
+    "main.js.map": "/nms-browser/static/js/main.9c11b7a6.chunk.js.map",
+    "runtime-main.js": "/nms-browser/static/js/runtime-main.abf5800e.js",
+    "runtime-main.js.map": "/nms-browser/static/js/runtime-main.abf5800e.js.map",
+    "static/js/2.28cbaff2.chunk.js": "/nms-browser/static/js/2.28cbaff2.chunk.js",
+    "static/js/2.28cbaff2.chunk.js.map": "/nms-browser/static/js/2.28cbaff2.chunk.js.map",
+    "index.html": "/nms-browser/index.html",
+    "precache-manifest.72a626e92fbe0d7f66177807fa56ebff.js": "/nms-browser/precache-manifest.72a626e92fbe0d7f66177807fa56ebff.js",
+    "service-worker.js": "/nms-browser/service-worker.js",
+    "static/css/main.ff37a50f.chunk.css.map": "/nms-browser/static/css/main.ff37a50f.chunk.css.map",
+    "static/js/2.28cbaff2.chunk.js.LICENSE.txt": "/nms-browser/static/js/2.28cbaff2.chunk.js.LICENSE.txt",
+    "static/media/SYSTEM.CONFLICT.png": "/nms-browser/static/media/SYSTEM.CONFLICT.8c3ebe0d.png",
+    "static/media/SYSTEM.ECOTRADING.png": "/nms-browser/static/media/SYSTEM.ECOTRADING.c123e5b5.png",
+    "static/media/SYSTEM.RACEVYKEEN.png": "/nms-browser/static/media/SYSTEM.RACEVYKEEN.2d3cb563.png",
+    "static/media/logo.svg": "/nms-browser/static/media/logo.8dad8028.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.abf5800e.js",
+    "static/js/2.28cbaff2.chunk.js",
+    "static/css/main.ff37a50f.chunk.css",
+    "static/js/main.9c11b7a6.chunk.js"
+  ]
+}
