@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2f312fe17fd6d3f9c65f36defd79e433",
+    "revision": "bb31fd4db1533f516f9c073567d5be66",
     "url": "/nms-browser/index.html"
   },
   {
