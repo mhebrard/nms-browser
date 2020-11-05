@@ -63,7 +63,7 @@ function getDistances(region) {
     // Format links from distances
     return data.reduce((res,r) => {
       if(r['Star system A'] !== '') {
-        res.push({source: r['SSI A'], target: r['SSI B'], distance: r['Distance (LY)']})
+        res.push({source: r['SSI A'], target: r['SSI B'], distance: parseInt(r['Distance (LY)'])})
       }
       return res
     },[]);

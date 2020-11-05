@@ -72,7 +72,7 @@ export function Scene() {
       vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
       dispatch(setPosition({x:vector.x, y:vector.y}))
 
-      dispatch(setNode(nodes.filter(f => f['SSI'] == n['SSI'])[0]))
+      dispatch(setNode(nodes.filter(f => f.id == n.id)[0]))
     }
     dispatch(setVisibility( n ? true : false))  
   }
