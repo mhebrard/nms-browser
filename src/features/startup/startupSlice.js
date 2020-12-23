@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const startupSlice = createSlice({
   name: 'startup',
   initialState: {
-    status: 'Empty',
+    status: 'NoData',
     catalogue: []
   },
   reducers: {

@@ -3,16 +3,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getGalaxy, getGalaxyList, getRegion, getGalaxySpecificRegionList} from './menuSlice';
 import { changeGalaxy, changeRegion } from '../../chains';
 import styles from './Menu.module.css';
+import { getCatalogue } from '../startup/startupSlice';
 
 export function Menu() {
   const dispatch = useDispatch()
-  const galaxyList = useSelector(getGalaxyList)
+  const catalogue = useSelector(getCatalogue)
   const galaxy = useSelector(getGalaxy)
-  const regionList = useSelector(getGalaxySpecificRegionList)
   const region = useSelector(getRegion)
+  const galaxyList = useSelector(getGalaxyList)
+  const regionList = useSelector(getGalaxySpecificRegionList)
 
   return (
-    <div className={[styles.abs, styles.region].join(" ")}>
+    <div className={[styles.abs, styles.content].join(" ")}>
       Galaxy: 
       <select
         name='galaxy'
@@ -20,8 +22,8 @@ export function Menu() {
         onChange={e => dispatch(changeGalaxy(e.target.value))}
       >
         <option value=''>--Select--</option>
-        {galaxyList.map(k => {
-          return <option key={k} value={k}>{k}</option>
+        {galaxyList.map(g => {
+          return <option key={g.id} value={g.name}>{g.id} - {g.name}</option>
         })}
       </select>
       Region:

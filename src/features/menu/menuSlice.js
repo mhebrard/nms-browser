@@ -6,20 +6,12 @@ import { getCatalogue } from '../startup/startupSlice';
 export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
-    galaxyList: [],
     galaxy: '',
-    regionList: [],
     region: '',
   },
   reducers: {
-    setGalaxyList: (state, action) => {
-      state.galaxyList = action.payload
-    },
     setGalaxy: (state, action) => {
       state.galaxy = action.payload
-    },
-    setRegionList: (state, action) => {
-      state.regionList = action.payload
     },
     setRegion: (state, action) => {
       state.region = action.payload
@@ -28,24 +20,44 @@ export const menuSlice = createSlice({
 });
 
 // Actions
-export const { setGalaxyList, setGalaxy, setRegionList, subsetRegionList, setRegion } = menuSlice.actions;
+export const { setGalaxy, subsetRegionList, setRegion } = menuSlice.actions;
 
 // Selectors
-export const getGalaxyList = state => state.menu.galaxyList;
 export const getGalaxy = state => state.menu.galaxy;
-export const getRegionList = state => state.menu.regionList;
 export const getRegion = state => state.menu.region;
 
 // Memoized Selectors
+export const getGalaxyList = createSelector(
+  [getCatalogue], (catalogue) => {
+    // Extract galaxies
+    const galaxyMap = catalogue.reduce((res, r) => {
+      if (!res[r.galaxyID] && r.galaxyID > 0) {
+        res[r.galaxyID] = {
+          id: r.galaxyID,
+          name: r.galaxy,
+          systemCount: 0
+        }
+      }
+      if (r.galaxyID > 0) {
+        res[r.galaxyID].systemCount++
+      }
+      return res
+    },{})
+    // Sort galaxies by ID
+    return Object.keys(galaxyMap).sort((a, b) => parseInt(a) - parseInt(b)).map(id => galaxyMap[id])
+  }
+)
+
 export const getGalaxySpecificRegionList = createSelector(
   [getCatalogue, getGalaxy], (catalogue, galaxy) => {
     const regionMap = catalogue
-      .filter(f => f.Galaxy == galaxy)
+      .filter(f => f.galaxy == galaxy)
       .reduce((res, r) => {
-      if (!res[r.Region]) { res[r.Region]=0 }
-      res[r.Region]++
+      if (!res[r.region]) { res[r.region]=0 }
+      res[r.region]++
       return res
     },{})
+    console.log('getGalaxySpecificRegionList', catalogue, galaxy, regionMap)
     return Object.keys(regionMap).sort()
   }
 )

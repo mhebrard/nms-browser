@@ -16,45 +16,51 @@ function loadCatalogue() {
   console.log('Load star systems catalogue...')
   return loadSheets(CATALOGUE)
   .then(data => {
+    console.log('chain / loadCatalogue', data)
+    // Get keys
+    const keyMap = {}
+    Object.keys(data[0]).forEach(k => keyMap[data[0][k]] = k)
     // Format nodes from catalogue
     return data.reduce((res,r) => {
-      // 62: "Lock Record?""
-      if(r[62] == 'Y') {
+      // Filter Locked record only
+      if(r[keyMap['Lock Record?']] == 'Y') {
         res.push({
-          SystemName: r[1],
-          Coordinates: r[6],
-          Glyphs: r[7],
-          DiscoveredBy: r[10],
-          DiscoveryDate: r[13],
-          SurveyDate: r[14],
-          Civilized: r[17],
-          Bases: r[19],
-          Platform: r[20],
-          Mode: r[21],
-          StarCount: r[22],
-          StarClass: r[23],
-          StarColor: r[24],
-          PlanetCount: r[25],
-          MoonCount: r[26],
-          Faction: r[27],
-          LY: r[29],
-          Water: r[30],
-          Economy: r[31],
-          Wealth: r[32],
-          Buy: r[33.0],
-          Sell: r[34.0],
-          Conflict: r[35],
-          Release: r[36],
-          X: r[58],
-          Y: r[59],
-          Z: r[60],
-          SSI: r[61],
-          Locked: r[62],
-          Phantom: r[64],
-          Wiki: r[67],
-          Research: r[74],
-          Galaxy: r[76],
-          Region: r[77]
+          systemName: r[keyMap['System Name (Unique entry search key)']],
+          coordinates: r[keyMap['Galactic Coordinates']],
+          glyphs: r[keyMap['Glyph Code']],
+          discoveredBy: r[keyMap['Discovered by']],
+          discoveryDate: r[keyMap['Discovery Date']],
+          surveyDate: r[keyMap['Survey Date']],
+          civilized: r[keyMap['Civilized?']],
+          bases: r[keyMap['Bases']],
+          platform: r[keyMap['Platform']],
+          mode: r[keyMap['Mode']],
+          starCount: r[keyMap['Multiple stars?']],
+          starClass: r[keyMap['Category']],
+          starColor: r[keyMap['Color']],
+          planetCount: r[keyMap['# of planets']],
+          moonCount: r[keyMap['# of moons']],
+          faction: r[keyMap['Faction']],
+          ly: r[keyMap['LY from center (auto estimate)']],
+          water: r[keyMap['Water (Y/N)']],
+          economy: r[keyMap['Economy']],
+          wealth: r[keyMap['Wealth']],
+          buy: r[keyMap['e-buy']],
+          sell: r[keyMap['E-Sell']],
+          conflict: r[keyMap['Conflict']],
+          release: r[keyMap['Release']],
+          cx: r[keyMap['X coord']],
+          cy: r[keyMap['Y coord']],
+          cz: r[keyMap['Z coord']],
+          ssi: r[keyMap['System ID']],
+          locked: r[keyMap['Lock Record?']],
+          phantom: r[keyMap['Phantom System?']],
+          wiki: r[keyMap['NMS wiki Link']],
+          age: r[keyMap['Star System Age (billions of years)']],
+          research: r[keyMap['Researchteam']],
+          galaxy: r[keyMap['Galaxy']],
+          galaxyID: r[keyMap['GalaxyID']],
+          region: r[keyMap['Region']]
         })
       }
       return res
@@ -71,13 +77,6 @@ export const loadData = () => dispatch => {
     // Save full catalogue
     dispatch(setCatalogue(data))
     dispatch(setStatus('Full'))
-    // Extract galaxy list
-    const galaxyMap = data.reduce((res, r) => {
-      if(!res[r.Galaxy]) { res[r.Galaxy] = 0 }
-      res[r.Galaxy]++
-      return res
-    },{})
-    dispatch(setGalaxyList(Object.keys(galaxyMap)))
   })
 }
 
