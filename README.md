@@ -23,6 +23,7 @@ Data are extracted from the [AGT DB Tool](https://nomanssky.gamepedia.com/AGT_NM
 * When user select a galaxy, that set *status*='Galaxy' and *galaxy*='ABC'
 * When *status*='Galaxy', **Startup** call **Menu** and **Galaxy**
 * When user select a region, that set *status*='Region' and *region*='DEF'
+* When *status*='Region', **Startup** call **Menu** and **Region**
 
 ## Deploy on github
 

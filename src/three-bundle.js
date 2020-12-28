@@ -6,7 +6,8 @@ export {
   SphereGeometry,
   Sprite,
   SpriteMaterial,
-  TextureLoader
+  TextureLoader,
+  Vector3
 } from 'three';
 
 export { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';

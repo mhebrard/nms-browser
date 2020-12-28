@@ -1,13 +1,14 @@
-import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { createSlice } from '@reduxjs/toolkit';
 import { getCatalogue } from '../startup/startupSlice';
+import { CATEGORIES } from '../../data/categories';
 
 export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
     galaxy: '',
     region: '',
+    category: CATEGORIES.star
   },
   reducers: {
     setGalaxy: (state, action) => {
@@ -15,16 +16,20 @@ export const menuSlice = createSlice({
     },
     setRegion: (state, action) => {
       state.region = action.payload
-    }
+    },
+    setCategory: (state, action) => {
+      state.category = action.payload;
+    },
   }
 });
 
 // Actions
-export const { setGalaxy, subsetRegionList, setRegion } = menuSlice.actions;
+export const { setGalaxy, setRegion, setCategory } = menuSlice.actions;
 
 // Selectors
 export const getGalaxy = state => state.menu.galaxy;
 export const getRegion = state => state.menu.region;
+export const getCategory = state => state.menu.category;
 
 // Memoized Selectors
 export const getGalaxyList = createSelector(
@@ -57,8 +62,7 @@ export const getGalaxySpecificRegionList = createSelector(
       res[r.region]++
       return res
     },{})
-    console.log('getGalaxySpecificRegionList', catalogue, galaxy, regionMap)
-    return Object.keys(regionMap).sort()
+    return Object.keys(regionMap).sort().map(d => {return {name: d, systemCount: regionMap[d]} })
   }
 )
 

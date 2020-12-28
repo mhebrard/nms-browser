@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useReducer } from 'react'
+import React, { useRef, useState, useMemo} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import * as THREE from 'three'
 import { Canvas, useFrame } from 'react-three-fiber'
@@ -8,6 +8,8 @@ import styles from './Startup.module.css'
 
 import { Menu } from '../menu/Menu'
 import { Galaxy } from '../galaxy/Galaxy'
+import { Region } from '../region/Region'
+import { Tooltip } from '../tooltip/Tooltip'
 
 // geometry
 const octahedron = {
@@ -76,101 +78,27 @@ export function Startup() {
 
   return (
     <div style={{ width: '100%', height: '100%' }} >
-      {/* Threejs canvas */}
-      <Canvas style={{ background: '#000000' }}>
-        <ambientLight />
-        <pointLight position={[10, 10, 10]} />
-        { status == "NoData" || status == "Full" ? 
-          <AGT position={[0,0,0]} dispatch={dispatch} active={false} />
-          : null
-        }
-        { status == "Loading" ? 
-          <AGT position={[0,0,0]} dispatch={dispatch} active={true} />
-          : null
-        }
-      </Canvas>
+      { status == "Region" 
+         ? <Region/> 
+         : <Canvas style={{ background: '#000000' }}>
+            <ambientLight />
+            <pointLight position={[10, 10, 10]} />
+            { status == "NoData" || status == "Full"
+              ? <AGT position={[0,0,0]} dispatch={dispatch} active={false} />
+              : null
+            }
+            { status == "Loading"
+              ? <AGT position={[0,0,0]} dispatch={dispatch} active={true} />
+              : null
+            }
+          </Canvas>
+      }
       {/* Overlay HTML */}
       <div className={styles.status}>{status}</div>
       {status == "NoData" ? <LoadButton/> : null}
-      {status == "Full" || status == "Galaxy"? <Menu/> : null}
+      {status == "Full" || status == "Galaxy" || status == "Region" ? <Menu/> : null}
+      {status == "Region" ? <Tooltip /> : null}
       {status == "Galaxy" ? <Galaxy/> : null}
     </div>
   )
-
-  // function render() {
-  //   switch (status) {
-  //     case 'Empty':
-  //       return (
-  //         <div>
-  //           <Status />
-  //           <Logo />
-  //           <Loading />
-  //         </div>
-  //       )
-  //     case 'Loading':
-  //       return (
-  //         <div>
-  //           <Status />
-  //           <Logo />
-  //         </div>
-  //       )
-  //     case 'Full':
-  //       return (
-  //         <div>
-  //           <Status />
-  //           <Logo />
-  //           <Menu />
-  //         </div>
-  //       )
-  //     case 'Galaxy':
-  //       return (
-  //         <div>
-  //           <Status />
-  //           <Logo />
-  //           <Menu />
-  //         </div>
-  //       )
-  //     case 'Region':
-  //       return (
-  //         <div>
-  //           <Status />
-  //           <Logo />
-  //           <Menu />
-  //           <Scene />
-  //         </div>
-  //       )
-  //     default:
-  //       return Loading()
-  //   }
-  // }
-
-  // function Box(props) {
-  //   // This reference will give us direct access to the mesh
-  //   const mesh = useRef()
-  
-  //   // Set up state for the hovered and active state
-  //   const [hovered, setHover] = useState(false)
-  //   const [active, setActive] = useState(false)
-  
-  //   // Rotate mesh every frame, this is outside of React without overhead
-  //   useFrame(() => {
-  //     mesh.current.rotation.x = mesh.current.rotation.y += 0.01
-  //   })
-  
-  //   return (
-  //     <mesh
-  //       {...props}
-  //       ref={mesh}
-  //       scale={active ? [1.5, 1.5, 1.5] : [1, 1, 1]}
-  //       onClick={(event) => setActive(!active)}
-  //       onPointerOver={(event) => setHover(true)}
-  //       onPointerOut={(event) => setHover(false)}>
-  //       <boxBufferGeometry args={[1, 1, 1]} />
-  //       <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-  //     </mesh>
-  //   )
-  // }
-
-  // return render()
-  
 }

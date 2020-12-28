@@ -1,6 +1,6 @@
-import { setCatalogue, setStatus } from './features/startup/startupSlice'
-import { setGalaxy, setGalaxyList, subsetRegionList } from './features/menu/menuSlice'
-import { CATALOGUE } from './data/assets'
+import { setCatalogue, setDistances, setStatus } from './features/startup/startupSlice'
+import { setGalaxy, setRegion } from './features/menu/menuSlice'
+import { CATALOGUE, DISTANCES } from './data/assets'
 import * as d3 from './d3-bundle';
 
 // Data: Load spreadsheets into array
@@ -16,7 +16,7 @@ function loadCatalogue() {
   console.log('Load star systems catalogue...')
   return loadSheets(CATALOGUE)
   .then(data => {
-    console.log('chain / loadCatalogue', data)
+    console.log('chain / loadCatalogue OK')
     // Get keys
     const keyMap = {}
     Object.keys(data[0]).forEach(k => keyMap[data[0][k]] = k)
@@ -68,14 +68,38 @@ function loadCatalogue() {
   })
 }
 
+// Data: Load region's star system distances
+function loadDistances() {
+  console.log('Load star systems distances...')
+  return loadSheets(DISTANCES)
+  .then(data => {
+    console.log('chain / loadDistances OK')
+    return data.reduce((res,r) => {
+      if (r['Star system A'] !== '') {
+        res.push({
+          source: r['SSI A'],
+          sourceName: r['System Name A'],
+          target: r['SSI B'],
+          targetName: r['System Name B'],
+          distance: parseInt(r['Inter System Distance (ly)']),
+          region: r['Region A']
+        })
+        return res
+      }
+    },[]);
+  })
+}
+
+
 export const loadData = () => dispatch => {
   // return Promise.all([loadCatalogue(region), getDistances(region)])
   dispatch(setStatus('Loading'))
-  return loadCatalogue()
+  return Promise.all([loadCatalogue(), loadDistances()])
   .then(data => {
-    console.log('loadData / catalogue', data)
+    // console.log('loadData / catalogue', data)
     // Save full catalogue
-    dispatch(setCatalogue(data))
+    dispatch(setCatalogue(data[0]))
+    dispatch(setDistances(data[1]))
     dispatch(setStatus('Full'))
   })
 }
@@ -90,4 +114,6 @@ export const changeGalaxy = galaxy => dispatch => {
 export const changeRegion = region => dispatch => {
   // Display galaxy scene
   dispatch(setStatus('Region'))
+  // Set Menu
+  dispatch(setRegion(region))
 }
