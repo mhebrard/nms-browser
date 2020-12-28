@@ -4,23 +4,26 @@ Goal: Display No Man's Sky regions in 3D and navigate through star systems
 
 ## Datasource
 
-Data are sourced from google spreadsheets.
+Data are extracted from the [AGT DB Tool](https://nomanssky.gamepedia.com/AGT_NMS_DB_Tool_Guide)
 
-1. Create a spreadsheet with the structure:
-  `SSI, Original Name, PC Name, PS4 Name, XBOX Name, Star Class, Star Color, Race, Economy, Economy Tier, Sell, Buy, Wealth, Wealth Tier, Conflict, Conflict Tier, Planets, Moons, Discovered by, Date, Distance Center, Coordinates, Glyphs`
-2. rename the tab as "Catalogue"
-3. Fill data
-4. Share spreadsheet
-  a. Click on "File/Publish on the Web"
-  b. Select the tab "Catalogue"
-  c. Select "Tab-separated value (.tsv)
-  d. Click on "Publish"
-  e. Copy the link
-  f. Create a new region entry in `/src/data/regions.js`
-5. Create a new tab "Distances" with the structure:
-  `Star system A, SSI A, Star system B, SSI B, Distance (LY)`
-6. Fill data
-7. Share spreadsheet
+* Galaxies, regions and systems info are extracted from locked entries in System DB.
+* Distance between systems are extracted from Star Distance Modeller
+
+## Data Flow
+
+* **App** call **Startup**
+* **Startup** define *status*='NoData' and *catalogue*=[]
+* When *status*='NoData', **Startup** call **AGT** and **LoadButton**
+* When user click on **AGT** or **LoadButton** that call *loadData()*
+* *loadData()* set *status*='Loading' & call *loadCatalogue()*
+* When *status*='Loading', **Startup** call **AGT** active
+* When *loadCatalogue()* finish, set *catalogue*=[...] and *status*='Full'
+* When *status*='Full', **Startup** call **AGT** and **Menu**
+* **Menu** define *galaxy*='' and *region*=''
+* When user select a galaxy, that set *status*='Galaxy' and *galaxy*='ABC'
+* When *status*='Galaxy', **Startup** call **Menu** and **Galaxy**
+* When user select a region, that set *status*='Region' and *region*='DEF'
+* When *status*='Region', **Startup** call **Menu** and **Region**
 
 ## Deploy on github
 

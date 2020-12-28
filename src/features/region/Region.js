@@ -1,31 +1,24 @@
-import React from 'react';
-import {useRef, useEffect} from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-
-import { getNodes, getLinks, getCategory, getScale } from './sceneSlice'
-import styles from './Scene.module.css';
-import { setVisibility, setPosition, setNode } from '../tooltip/tooltipSlices'
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ForceGraph3D from 'react-force-graph-3d'
-import { COLORS } from '../../data/categories'
-import { circle, reticule } from '../../data/assets'
 import * as THREE from '../../three-bundle'
-import { Vector3 } from 'three';
+import { COLORS } from '../../data/categories'
+import { getRegionSpecificDistancesList, getRegionSpecificSystemList } from './regionSlice';
+import { getCategory } from '../menu/menuSlice';
+import { circle } from '../../data/assets';
+import { setVisibility, setPosition, setNode } from '../tooltip/tooltipSlices'
 
-export function Scene() {
-  const nodes = useSelector(getNodes)
-  const links = useSelector(getLinks)
-  const category = useSelector(getCategory)
-  const scale = useSelector(getScale)
+export function Region() {
+  // Get systems data
+  const systems = useSelector(getRegionSpecificSystemList)
+  const nodes = systems.map(d => { return {...d, id: d.ssi}} )
+  const distances = useSelector(getRegionSpecificDistancesList)
+  const links = distances.map(d => { return {...d} })
+  const category = useSelector(getCategory) // from scene 
+  const scale = 10
   const dispatch = useDispatch()
-
-  // Copy data for graph
-  const graphData = {
-    nodes: nodes.map(e => { return {...e} }),
-    links: links.map(e => { return {...e} })
-  }
-
-  //Handlers
-
+  
+  // Create Object
   function objectHandler(n) {
     // use a sphere as a drag handle
     const obj = new THREE.Mesh(
@@ -50,7 +43,7 @@ export function Scene() {
   
     return obj;
   }
-
+  
   function onClickHandler(n, ref) {
     // Aim at node from outside it
     const distance = 120;
@@ -65,19 +58,18 @@ export function Scene() {
 
   function onHoverHandler(n, ref) {
     if (n) {
-      const vector = new Vector3(n.x,n.y,n.z)
+      const vector = new THREE.Vector3(n.x,n.y,n.z)
       const canvas = ref.current.renderer().domElement
       vector.project(ref.current.camera())
       vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
       vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
       dispatch(setPosition({x:vector.x, y:vector.y}))
-
-      dispatch(setNode(nodes.filter(f => f['SSI'] == n['SSI'])[0]))
+      dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
     }
-    dispatch(setVisibility( n ? true : false))  
+    dispatch(setVisibility(n ? true : false))  
   }
 
-  // Effects
+  // Graph
   const Graph = () => {
     const ref = useRef();
     useEffect(() => {
@@ -90,24 +82,24 @@ export function Scene() {
 
       // Force distance
       ref.current.d3Force('link').distance(n => n.distance);
-
-      // Add
-      // ref.current.scene().add(reticule)
-    },[])
+    }, [])
 
     return <ForceGraph3D
       ref={ref}
-      graphData={graphData}
+      graphData={{
+        nodes: nodes,
+        links: links
+      }}
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
       linkVisibility={true}
-      // nodeLabel={n => n['PC Name'] ? n['PC Name'] : n['Original Name']}
+      // nodeLabel={n => n.systemName}
       onNodeClick={n => onClickHandler(n, ref)}
       onNodeHover={n => onHoverHandler(n, ref)}
     />
   }
 
-  return <Graph/>
+  return (
+    <Graph/>
+  )
 }
-
-export default Scene

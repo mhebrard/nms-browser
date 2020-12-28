@@ -26,84 +26,84 @@ export function Tooltip() {
   const node = useSelector(getNode)
   const pos = useSelector(getPosition)
 
-  // Define race
-  let img_race = ''
-  switch (node['Race']) {
-    case 'Korvax':
-      img_race = img_korvax
-      break;
-    case 'Gek':
-      img_race = img_gek
-      break;
-    case 'Vy\'keen':
-      img_race = img_vykeen
-      break;
-    default:
-      img_race = img_default
-      break;
-  }
+  let img_race = img_default
+  let img_eco = img_default
+  let img_war = img_rank0
+  let img_wealth = img_rank0
 
-  // Define economy
-  let img_eco = ''
-  switch (node['Economy Tier']) {
-    case 'Trading':
-      img_eco = img_trading
-      break;
-    case 'Materials':
-      img_eco = img_materials
-      break;
-    case 'Scientific':
-      img_eco = img_scientific
-      break;
-    case 'Mining':
-      img_eco = img_mining
-      break;
-    case 'Manufacturing':
-      img_eco = img_manufacturing
-      break;
-    case 'Technology':
-      img_eco = img_technology
-      break;
-    case 'Power':
-      img_eco = img_power
-      break;
-    default:
-      img_eco = img_default
-      break;
-  }
-
-  // Define conflict tier
-  let img_war = ''
-  switch (node['Conflict Tier']) {
-    case '1':
-      img_war = img_rank1
-      break;
-    case '2':
-      img_war = img_rank2
-      break;
-    case '3':
-      img_war = img_rank3
-      break;
-    default:
-      img_war = img_rank0
-      break;
-  }
-
-  // Define wealth tier
-  let img_wealth = ''
-  switch (node['Wealth Tier']) {
-    case '1':
-      img_wealth = img_rank1
-      break;
-    case '2':
-      img_wealth = img_rank2
-      break;
-    case '3':
-      img_wealth = img_rank3
-      break;
-    default:
-      img_wealth = img_rank0
-      break;
+  if (node) {
+    // Define race
+    switch (node.faction) {
+      case 'Korvax':
+        img_race = img_korvax
+        break;
+      case 'Gek':
+        img_race = img_gek
+        break;
+      case 'Vy\'keen':
+        img_race = img_vykeen
+        break;
+      default:
+        img_race = img_default
+        break;
+    }
+    // Define economy
+    switch (node.economy) {
+      case 'Trading':
+        img_eco = img_trading
+        break;
+      case 'Materials':
+        img_eco = img_materials
+        break;
+      case 'Scientific':
+        img_eco = img_scientific
+        break;
+      case 'Mining':
+        img_eco = img_mining
+        break;
+      case 'Manufacturing':
+        img_eco = img_manufacturing
+        break;
+      case 'Technology':
+        img_eco = img_technology
+        break;
+      case 'Power':
+        img_eco = img_power
+        break;
+      default:
+        img_eco = img_default
+        break;
+    }
+    // Define conflict tier
+    switch (node['Conflict Tier']) {
+      case '1':
+        img_war = img_rank1
+        break;
+      case '2':
+        img_war = img_rank2
+        break;
+      case '3':
+        img_war = img_rank3
+        break;
+      default:
+        img_war = img_rank0
+        break;
+    }
+    // Define wealth tier
+    switch (node['Wealth Tier']) {
+      case '1':
+        img_wealth = img_rank1
+        break;
+      case '2':
+        img_wealth = img_rank2
+        break;
+      case '3':
+        img_wealth = img_rank3
+        break;
+      default:
+        img_wealth = img_rank0
+        break;
+    }
   }
 
   const styleDyn = {
@@ -116,23 +116,23 @@ export function Tooltip() {
     <div className={[styles.abs, styles.tronbox, styles.content].join(" ")}
       style={styleDyn}>
       <div className={[styles.flex, styles.bold].join(" ")}>
-        {node['PC Name'] ? node['PC Name'] : node['Original Name']}
+        {node ? node.systemName : 'Unknown'}
       </div>
       <div className={[styles.flex].join(" ")}>
         <div className={styles.col}>
-          <img src={img_race} className={styles.img}/>
-          <img src={img_rank0}/>
+          <img src={img_race} className={styles.img} alt="faction"/>
+          <img src={img_rank0} alt="faction"/>
         </div>
         <div className={styles.col}>
-          <img src={img_eco} className={styles.img}/>
-          <img src={img_wealth}/>
+          <img src={img_eco} className={styles.img} alt="economy"/>
+          <img src={img_wealth} alt="economy"/>
         </div>
         <div className={styles.col}>
-          <img src={img_conflict} className={styles.img}/>
-          <img src={img_war}/>
+          <img src={img_conflict} className={styles.img} alt="conflict"/>
+          <img src={img_war} alt="conflict"/>
         </div>
       </div>
-      <div><small>Sell: {node['Sell']}% / Buy: {node['Buy']}%</small></div>
+      <div><small>Sell: {node ? node.sell : 0}% / Buy: {node ? node.buy : 0}%</small></div>
     </div>
   )
 }
