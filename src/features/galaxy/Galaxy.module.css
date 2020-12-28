@@ -1,12 +1,9 @@
 .abs {
   position: absolute;
-  top:0;
+  top:50%;
   left:0;
   right:0;
-  margin: auto;
+  margin:auto;
   z-index: 1;
-}
-.content {
-  margin:5px;
   color: white;
 }

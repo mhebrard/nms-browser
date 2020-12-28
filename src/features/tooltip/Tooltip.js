@@ -33,7 +33,7 @@ export function Tooltip() {
 
   if (node) {
     // Define race
-    switch (node['Race']) {
+    switch (node.faction) {
       case 'Korvax':
         img_race = img_korvax
         break;
@@ -48,7 +48,7 @@ export function Tooltip() {
         break;
     }
     // Define economy
-    switch (node['Economy Tier']) {
+    switch (node.economy) {
       case 'Trading':
         img_eco = img_trading
         break;
@@ -116,23 +116,23 @@ export function Tooltip() {
     <div className={[styles.abs, styles.tronbox, styles.content].join(" ")}
       style={styleDyn}>
       <div className={[styles.flex, styles.bold].join(" ")}>
-        {node ? (node['PC Name'] ? node['PC Name'] : node['Original Name']) : 'Unknown'}
+        {node ? node.systemName : 'Unknown'}
       </div>
       <div className={[styles.flex].join(" ")}>
         <div className={styles.col}>
-          <img src={img_race} className={styles.img}/>
-          <img src={img_rank0}/>
+          <img src={img_race} className={styles.img} alt="faction"/>
+          <img src={img_rank0} alt="faction"/>
         </div>
         <div className={styles.col}>
-          <img src={img_eco} className={styles.img}/>
-          <img src={img_wealth}/>
+          <img src={img_eco} className={styles.img} alt="economy"/>
+          <img src={img_wealth} alt="economy"/>
         </div>
         <div className={styles.col}>
-          <img src={img_conflict} className={styles.img}/>
-          <img src={img_war}/>
+          <img src={img_conflict} className={styles.img} alt="conflict"/>
+          <img src={img_war} alt="conflict"/>
         </div>
       </div>
-      <div><small>Sell: {node ? node['Sell'] : 0}% / Buy: {node ? node['Buy'] : 0}%</small></div>
+      <div><small>Sell: {node ? node.sell : 0}% / Buy: {node ? node.buy : 0}%</small></div>
     </div>
   )
 }

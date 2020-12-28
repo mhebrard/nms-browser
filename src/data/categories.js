@@ -6,7 +6,7 @@ export const COLORS = {
 }
 
 export const CATEGORIES = {
-  star: 'Star Color',
-  race: 'Race',
-  economy: 'Trade'
+  star: 'starColor',
+  faction: 'faction',
+  economy: 'economy'
 }
