@@ -56,7 +56,7 @@ export const getGalaxyList = createSelector(
 export const getGalaxySpecificRegionList = createSelector(
   [getCatalogue, getGalaxy], (catalogue, galaxy) => {
     const regionMap = catalogue
-      .filter(f => f.galaxy == galaxy)
+      .filter(f => f.galaxy === galaxy)
       .reduce((res, r) => {
       if (!res[r.region]) { res[r.region]=0 }
       res[r.region]++

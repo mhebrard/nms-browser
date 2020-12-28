@@ -23,7 +23,7 @@ const octahedron = {
 function LoadButton() {
   const dispatch = useDispatch()
   const status = useSelector(getStatus)
-  if (status == "NoData") {
+  if (status === "NoData") {
     return (
       <button className={styles.button}
           type='button'
@@ -78,16 +78,16 @@ export function Startup() {
 
   return (
     <div style={{ width: '100%', height: '100%' }} >
-      { status == "Region" 
+      { status === "Region" 
          ? <Region/> 
          : <Canvas style={{ background: '#000000' }}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            { status == "NoData" || status == "Full"
+            { status === "NoData" || status === "Full"
               ? <AGT position={[0,0,0]} dispatch={dispatch} active={false} />
               : null
             }
-            { status == "Loading"
+            { status === "Loading"
               ? <AGT position={[0,0,0]} dispatch={dispatch} active={true} />
               : null
             }
@@ -95,10 +95,10 @@ export function Startup() {
       }
       {/* Overlay HTML */}
       <div className={styles.status}>{status}</div>
-      {status == "NoData" ? <LoadButton/> : null}
-      {status == "Full" || status == "Galaxy" || status == "Region" ? <Menu/> : null}
-      {status == "Region" ? <Tooltip /> : null}
-      {status == "Galaxy" ? <Galaxy/> : null}
+      {status === "NoData" ? <LoadButton/> : null}
+      {status === "Full" || status === "Galaxy" || status === "Region" ? <Menu/> : null}
+      {status === "Region" ? <Tooltip /> : null}
+      {status === "Galaxy" ? <Galaxy/> : null}
     </div>
   )
 }

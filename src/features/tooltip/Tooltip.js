@@ -112,8 +112,6 @@ export function Tooltip() {
     left: `${pos.x}px`
   };
 
-  console.log('tooltip', node.faction, img_race)
-
   return (
     <div className={[styles.abs, styles.tronbox, styles.content].join(" ")}
       style={styleDyn}>
@@ -122,16 +120,16 @@ export function Tooltip() {
       </div>
       <div className={[styles.flex].join(" ")}>
         <div className={styles.col}>
-          <img src={img_race} className={styles.img}/>
-          <img src={img_rank0}/>
+          <img src={img_race} className={styles.img} alt="faction"/>
+          <img src={img_rank0} alt="faction"/>
         </div>
         <div className={styles.col}>
-          <img src={img_eco} className={styles.img}/>
-          <img src={img_wealth}/>
+          <img src={img_eco} className={styles.img} alt="economy"/>
+          <img src={img_wealth} alt="economy"/>
         </div>
         <div className={styles.col}>
-          <img src={img_conflict} className={styles.img}/>
-          <img src={img_war}/>
+          <img src={img_conflict} className={styles.img} alt="conflict"/>
+          <img src={img_war} alt="conflict"/>
         </div>
       </div>
       <div><small>Sell: {node ? node.sell : 0}% / Buy: {node ? node.buy : 0}%</small></div>

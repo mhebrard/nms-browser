@@ -93,7 +93,7 @@ export function Region() {
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
       linkVisibility={true}
-      nodeLabel={n => n.systemName}
+      // nodeLabel={n => n.systemName}
       onNodeClick={n => onClickHandler(n, ref)}
       onNodeHover={n => onHoverHandler(n, ref)}
     />

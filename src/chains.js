@@ -23,7 +23,7 @@ function loadCatalogue() {
     // Format nodes from catalogue
     return data.reduce((res,r) => {
       // Filter Locked record only
-      if(r[keyMap['Lock Record?']] == 'Y') {
+      if(r[keyMap['Lock Record?']] === 'Y') {
         res.push({
           systemName: r[keyMap['System Name (Unique entry search key)']],
           coordinates: r[keyMap['Galactic Coordinates']],
