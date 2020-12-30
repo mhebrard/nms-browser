@@ -59,8 +59,11 @@ function loadCatalogue() {
           age: r[keyMap['Star System Age (billions of years)']],
           research: r[keyMap['Researchteam']],
           galaxy: r[keyMap['Galaxy']],
+          region: r[keyMap['Region']],
           galaxyID: r[keyMap['GalaxyID']],
-          region: r[keyMap['Region']]
+          economyLevel: r[keyMap['Economy Level']],
+          wealthLevel: r[keyMap['Wealth Level']],
+          conflictLevel: r[keyMap['Conflict Level']],
         })
       }
       return res

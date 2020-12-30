@@ -5,6 +5,7 @@ import { isVisible, getNode, getPosition} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 import img_default from '../../img/SYSTEM.png'
+import img_cross from '../../img/SYSTEM.CROSS.png';
 import img_gek from '../../img/SYSTEM.RACEGEK.png';
 import img_korvax from '../../img/SYSTEM.RACEKORVAX.png';
 import img_vykeen from '../../img/SYSTEM.RACEVYKEEN.png';
@@ -43,16 +44,22 @@ export function Tooltip() {
       case 'Vy\'keen':
         img_race = img_vykeen
         break;
+      case 'Vy\'Keen':
+        img_race = img_vykeen
+        break;
+      case 'Uncharted':
+        img_race = img_cross
+        break;
       default:
         img_race = img_default
         break;
     }
     // Define economy
-    switch (node.economy) {
+    switch (node.economyLevel) {
       case 'Trading':
         img_eco = img_trading
         break;
-      case 'Materials':
+      case 'Advanced Materials':
         img_eco = img_materials
         break;
       case 'Scientific':
@@ -67,15 +74,18 @@ export function Tooltip() {
       case 'Technology':
         img_eco = img_technology
         break;
-      case 'Power':
+      case 'Power Generation':
         img_eco = img_power
+        break;
+      case 'Unavailable':
+        img_eco = img_cross
         break;
       default:
         img_eco = img_default
         break;
     }
     // Define conflict tier
-    switch (node['Conflict Tier']) {
+    switch (node.conflictLevel) {
       case '1':
         img_war = img_rank1
         break;
@@ -90,7 +100,7 @@ export function Tooltip() {
         break;
     }
     // Define wealth tier
-    switch (node['Wealth Tier']) {
+    switch (node.wealthLevel) {
       case '1':
         img_wealth = img_rank1
         break;
