@@ -2,6 +2,7 @@ import { setCatalogue, setDistances, setStatus } from './features/startup/startu
 import { setGalaxyID, setRegion } from './features/menu/menuSlice'
 import { CATALOGUE, DISTANCES } from './data/assets'
 import * as d3 from './d3-bundle';
+import { MODES, PLATFORMS } from './data/platforms';
 
 // Data: Load spreadsheets into array
 function loadSheets(url) {
@@ -47,23 +48,16 @@ function loadCatalogue() {
           region.systems[r[keyMap['System ID']]] = {}
         }
         const system = region.systems[r[keyMap['System ID']]]
-        // Set platform
+        // Set platform & mode
         if (system[r[keyMap['Platform']]] === undefined) {
-          system['PC'] = {}
-          system['PS4'] = {}
-          system['Xbox'] = {}
+          Object.keys(PLATFORMS).forEach(p => {
+            system[PLATFORMS[p]] = {}
+            Object.keys(MODES).forEach(m => {
+              system[PLATFORMS[p]][MODES[m]] = {}
+            })
+          })
         }
-        const platform = system[r[keyMap['Platform']]]
-        // Set mode
-        if (system['PC'][r[keyMap['Mode']]] === undefined) {
-          system['PC'][r[keyMap['Mode']]] = {}
-        }
-        if (system['PS4'][r[keyMap['Mode']]] === undefined) {
-          system['PS4'][r[keyMap['Mode']]] = {}
-        }
-        if (system['Xbox'][r[keyMap['Mode']]] === undefined) {
-          system['Xbox'][r[keyMap['Mode']]] = {}
-        }
+        const platform = system[r[keyMap['Platform']].toUpperCase()]
         const mode = platform[r[keyMap['Mode']]]
         // Check date
         const prevSurvey = system.surveyDate !== undefined ? new Date(system.surveyDate).setHours(0, 0, 0, 0) : new Date(0)
@@ -72,7 +66,7 @@ function loadCatalogue() {
         if (system.surveyDate === undefined || (prevSurvey < currSurvey)) {
           if (r[keyMap['PC System Name']] !== '') { system['PC'][r[keyMap['Mode']]].name = r[keyMap['PC System Name']] }
           if (r[keyMap['PS4 System Name']] !== '') { system['PS4'][r[keyMap['Mode']]].name = r[keyMap['PS4 System Name']] }
-          if (r[keyMap['Xbox System Name']] !== '') { system['Xbox'][r[keyMap['Mode']]].name = r[keyMap['Xbox System Name']] }
+          if (r[keyMap['Xbox System Name']] !== '') { system['XBOX'][r[keyMap['Mode']]].name = r[keyMap['Xbox System Name']] }
           if (r[keyMap['Original Sys Name']] !== '') { system.name = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Galactic Coordinates']] !== '') { system.coordinates = r[keyMap['Galactic Coordinates']] }
           if (r[keyMap['Glyph Code']] !== '') { system.glyphs = r[keyMap['Glyph Code']] }
@@ -121,9 +115,9 @@ function loadCatalogue() {
           if (r[keyMap['e-buy']] !== '') { system.buy = r[keyMap['e-buy']] }
           if (r[keyMap['E-Sell']] !== '') { system.sell = r[keyMap['E-Sell']] }
           if (r[keyMap['Conflict']] !== '') { system.conflict = r[keyMap['Conflict']] }
-          if (r[keyMap['X coord']] !== '') { region.cx = r[keyMap['X coord']] }
-          if (r[keyMap['Y coord']] !== '') { region.cy = r[keyMap['Y coord']] }
-          if (r[keyMap['Z coord']] !== '') { region.cz = r[keyMap['Z coord']] }
+          if (r[keyMap['X Coord (dec)']] !== '') { region.cx = r[keyMap['X Coord (dec)']] }
+          if (r[keyMap['Y Coord (dec)']] !== '') { region.cy = r[keyMap['Y Coord (dec)']] }
+          if (r[keyMap['Z Coord (dec)']] !== '') { region.cz = r[keyMap['Z Coord (dec)']] }
           if (r[keyMap['System ID']] !== '') { system.ssi = r[keyMap['System ID']] }
           if (r[keyMap['Lock Record?']] !== '') { mode.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '') { system.phantom = r[keyMap['Phantom System?']] }
@@ -140,7 +134,7 @@ function loadCatalogue() {
         else { // Fill blank from older record
           if (r[keyMap['PC System Name']] !== '' && system['PC'][r[keyMap['Mode']]].name === undefined) { system['PC'][r[keyMap['Mode']]].name = r[keyMap['PC System Name']] }
           if (r[keyMap['PS4 System Name']] !== '' && system['PS4'][r[keyMap['Mode']]].name === undefined) { system['PS4'][r[keyMap['Mode']]].name = r[keyMap['PS4 System Name']] }
-          if (r[keyMap['Xbox System Name']] !== '' && system['Xbox'][r[keyMap['Mode']]].name === undefined) { system['Xbox'][r[keyMap['Mode']]].name = r[keyMap['Xbox System Name']] }
+          if (r[keyMap['Xbox System Name']] !== '' && system['XBOX'][r[keyMap['Mode']]].name === undefined) { system['XBOX'][r[keyMap['Mode']]].name = r[keyMap['Xbox System Name']] }
           if (r[keyMap['Original Sys Name']] !== '' && system.name === undefined) { system.name = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Galactic Coordinates']] !== '' && system.coordinates === undefined) { system.coordinates = r[keyMap['Galactic Coordinates']] }
           if (r[keyMap['Glyph Code']] !== '' && system.glyphs === undefined) { system.glyphs = r[keyMap['Glyph Code']] }
@@ -184,9 +178,9 @@ function loadCatalogue() {
           if (r[keyMap['e-buy']] !== '' && system.buy === undefined) { system.buy = r[keyMap['e-buy']] }
           if (r[keyMap['E-Sell']] !== '' && system.sell === undefined ) { system.sell = r[keyMap['E-Sell']] }
           if (r[keyMap['Conflict']] !== '' && system.conflict === undefined) { system.conflict = r[keyMap['Conflict']] }
-          if (r[keyMap['X coord']] !== '' && region.cx === undefined) { region.cx = r[keyMap['X coord']] }
-          if (r[keyMap['Y coord']] !== '' && region.cy === undefined) { region.cy = r[keyMap['Y coord']] }
-          if (r[keyMap['Z coord']] !== '' && region.cz === undefined) { region.cz = r[keyMap['Z coord']] }
+          if (r[keyMap['X Coord (dec)']] !== '' && region.cx === undefined) { region.cx = r[keyMap['X Coord (dec)']] }
+          if (r[keyMap['Y Coord (dec)']] !== '' && region.cy === undefined) { region.cy = r[keyMap['Y Coord (dec)']] }
+          if (r[keyMap['Z Coord (dec)']] !== '' && region.cz === undefined) { region.cz = r[keyMap['Z Coord (dec)']] }
           if (r[keyMap['System ID']] !== '' && system.ssi === undefined) { system.ssi = r[keyMap['System ID']] }
           if (r[keyMap['Lock Record?']] !== '' && mode.locked === undefined) { mode.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '' && system.phantom === undefined) { system.phantom = r[keyMap['Phantom System?']] }

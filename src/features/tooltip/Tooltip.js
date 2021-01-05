@@ -21,11 +21,14 @@ import img_rank0 from '../../img/RANK.0.png';
 import img_rank1 from '../../img/RANK.1.png';
 import img_rank2 from '../../img/RANK.2.png';
 import img_rank3 from '../../img/RANK.3.png';
+import { getMode, getPlatform } from '../menu/menuSlice';
 
 export function Tooltip() {
   const visible = useSelector(isVisible)
   const node = useSelector(getNode)
   const pos = useSelector(getPosition)
+  const platform = useSelector(getPlatform)
+  const mode = useSelector(getMode)
 
   let img_race = img_default
   let img_eco = img_default
@@ -126,7 +129,7 @@ export function Tooltip() {
     <div className={[styles.abs, styles.tronbox, styles.content].join(" ")}
       style={styleDyn}>
       <div className={[styles.flex, styles.bold].join(" ")}>
-        {node ? node.systemName : 'Unknown'}
+        { node ? node[platform][mode].name || node.name || '[unknown]' : null }
       </div>
       <div className={[styles.flex].join(" ")}>
         <div className={styles.col}>
