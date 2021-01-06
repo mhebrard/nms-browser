@@ -2,17 +2,20 @@ import { createSelector } from 'reselect';
 import { createSlice } from '@reduxjs/toolkit';
 import { getCatalogue } from '../startup/startupSlice';
 import { CATEGORIES } from '../../data/categories';
+import { MODES, PLATFORMS } from '../../data/platforms';
 
 export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
-    galaxy: '',
+    galaxyID: 0,
     region: '',
-    category: CATEGORIES.star
+    category: CATEGORIES.star,
+    platform: PLATFORMS.pc,
+    mode: MODES.normal
   },
   reducers: {
-    setGalaxy: (state, action) => {
-      state.galaxy = action.payload
+    setGalaxyID: (state, action) => {
+      state.galaxyID = action.payload
     },
     setRegion: (state, action) => {
       state.region = action.payload
@@ -20,49 +23,52 @@ export const menuSlice = createSlice({
     setCategory: (state, action) => {
       state.category = action.payload;
     },
+    setPlatform: (state, action) => {
+      state.platform = action.payload;
+    },
+    setMode: (state, action) => {
+      state.mode = action.payload;
+    },
   }
 });
 
 // Actions
-export const { setGalaxy, setRegion, setCategory } = menuSlice.actions;
+export const { setGalaxyID, setRegion, setCategory, setPlatform, setMode } = menuSlice.actions;
 
 // Selectors
-export const getGalaxy = state => state.menu.galaxy;
+export const getGalaxyID = state => state.menu.galaxyID;
 export const getRegion = state => state.menu.region;
 export const getCategory = state => state.menu.category;
+export const getPlatform = state => state.menu.platform;
+export const getMode = state => state.menu.mode;
 
 // Memoized Selectors
 export const getGalaxyList = createSelector(
   [getCatalogue], (catalogue) => {
     // Extract galaxies
-    const galaxyMap = catalogue.reduce((res, r) => {
-      if (!res[r.galaxyID] && r.galaxyID > 0) {
-        res[r.galaxyID] = {
-          id: r.galaxyID,
-          name: r.galaxy,
-          systemCount: 0
-        }
+    return catalogue.filter(g => g !== undefined).map(g => {
+      return {
+        name: g.galaxyName,
+        id: g.galaxyID,
+        regionCount: Object.keys(g.regions).length
       }
-      if (r.galaxyID > 0) {
-        res[r.galaxyID].systemCount++
-      }
-      return res
-    },{})
-    // Sort galaxies by ID
-    return Object.keys(galaxyMap).sort((a, b) => parseInt(a) - parseInt(b)).map(id => galaxyMap[id])
+    })
   }
 )
 
 export const getGalaxySpecificRegionList = createSelector(
-  [getCatalogue, getGalaxy], (catalogue, galaxy) => {
-    const regionMap = catalogue
-      .filter(f => f.galaxy === galaxy)
-      .reduce((res, r) => {
-      if (!res[r.region]) { res[r.region]=0 }
-      res[r.region]++
-      return res
-    },{})
-    return Object.keys(regionMap).sort().map(d => {return {name: d, systemCount: regionMap[d]} })
+  [getCatalogue, getGalaxyID], (catalogue, galaxyID) => {
+    if (galaxyID > 0) {
+      const regions = catalogue[galaxyID].regions
+      return Object.keys(regions).map(k => {
+        return {
+          name: regions[k].regionName,
+          systemCount: regions[k].systems.filter(s => s !== undefined).length
+        }
+      })
+    } else {
+      return []
+    }
   }
 )
 
