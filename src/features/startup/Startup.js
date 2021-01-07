@@ -16,10 +16,8 @@ function LoadButton() {
   const status = useSelector(getStatus)
   if (status === "NoData") {
     return (
-      <button className={styles.button}
-          type='button'
-          onClick={e => dispatch(loadData())}
-        >Click on the octahedron to initiate the map
+      <button className={styles.button} type='button'>
+        Click on the octahedron to initiate the map
       </button>
     )
   } else { return null}
