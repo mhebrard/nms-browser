@@ -4,7 +4,7 @@ import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from '../../three-bundle'
 import { COLORS } from '../../data/categories'
 import { getRegionSpecificDistancesList, getRegionSpecificSystemList } from './regionSlice';
-import { getCategory } from '../menu/menuSlice';
+import { getCategory, getMode, getPlatform } from '../menu/menuSlice';
 import { circle } from '../../data/assets';
 import { setVisibility, setPosition, setNode } from '../tooltip/tooltipSlices'
 
@@ -14,7 +14,10 @@ export function Region() {
   const nodes = systems.map(d => { return {...d, id: d.ssi}} )
   const distances = useSelector(getRegionSpecificDistancesList)
   const links = distances.map(d => { return {...d} })
-  const category = useSelector(getCategory) // from scene 
+  const category = useSelector(getCategory)
+  const platform = useSelector(getPlatform)
+  const mode = useSelector(getMode)
+
   const scale = 10
   const dispatch = useDispatch()
   
@@ -33,7 +36,7 @@ export function Region() {
     // add img sprite as child
     const material = new THREE.SpriteMaterial(
       { 
-        color: COLORS[n[category]],
+        color: COLORS[n[category]] || '#ffffff',
         map: circle
       }
     );
@@ -44,7 +47,45 @@ export function Region() {
     return obj;
   }
   
+  // function onClickHandler(n, ref) {
+  //   // Aim at node from outside it
+  //   const distance = 120;
+  //   const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
+  
+  //   ref.current.cameraPosition(
+  //     { x: n.x * distRatio, y: n.y * distRatio, z: n.z * distRatio }, // new position
+  //     n, // lookAt ({ x, y, z })
+  //     3000  // ms transition duration
+  //   );
+  // }
+
+  // function onHoverHandler(n, ref) {
+  //   if (n) {
+  //     const vector = new THREE.Vector3(n.x,n.y,n.z)
+  //     const canvas = ref.current.renderer().domElement
+  //     vector.project(ref.current.camera())
+  //     vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
+  //     vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
+  //     dispatch(setPosition({x:vector.x, y:vector.y}))
+  //     dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
+  //   }
+  //   dispatch(setVisibility(n ? true : false))  
+  // }
+
+  // Display tooltip
   function onClickHandler(n, ref) {
+    const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
+    console.log(n, pos)
+    dispatch(setPosition({x: pos.x, y: pos.y}))
+    dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
+    dispatch(setVisibility(true))
+  }
+
+  // Move toward node
+  function onRightClickHandler(n, ref) {
+    // Hide tooltip
+    dispatch(setVisibility(false))
+
     // Aim at node from outside it
     const distance = 120;
     const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
@@ -54,19 +95,6 @@ export function Region() {
       n, // lookAt ({ x, y, z })
       3000  // ms transition duration
     );
-  }
-
-  function onHoverHandler(n, ref) {
-    if (n) {
-      const vector = new THREE.Vector3(n.x,n.y,n.z)
-      const canvas = ref.current.renderer().domElement
-      vector.project(ref.current.camera())
-      vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
-      vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
-      dispatch(setPosition({x:vector.x, y:vector.y}))
-      dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
-    }
-    dispatch(setVisibility(n ? true : false))  
   }
 
   // Graph
@@ -93,9 +121,11 @@ export function Region() {
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
       linkVisibility={true}
-      // nodeLabel={n => n.systemName}
+      nodeLabel={n => n[platform][mode].name || n.name || '[unknown]' }
+      // onNodeHover={n => onHoverHandler(n, ref)}
       onNodeClick={n => onClickHandler(n, ref)}
-      onNodeHover={n => onHoverHandler(n, ref)}
+      onNodeRightClick={n => onRightClickHandler(n, ref)}
+      onBackgroundClick={() => dispatch(setVisibility(false))}
     />
   }
 
