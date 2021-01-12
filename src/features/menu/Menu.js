@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getGalaxyID, getGalaxyList, getRegion, getPlatform, getGalaxySpecificRegionList, setPlatform, setMode, getMode} from './menuSlice';
+import { getGalaxyID, getGalaxyList, getRegionID, getPlatform, getGalaxySpecificRegionList, setPlatform, setMode, getMode} from './menuSlice';
 import { changeGalaxy, changeRegion } from '../../chains';
 import styles from './Menu.module.css';
 import { MODES, PLATFORMS } from '../../data/platforms';
@@ -8,8 +8,8 @@ import { MODES, PLATFORMS } from '../../data/platforms';
 export function Menu() {
   const dispatch = useDispatch()
   const galaxyID = useSelector(getGalaxyID)
-  const region = useSelector(getRegion)
   const galaxyList = useSelector(getGalaxyList)
+  const regionID = useSelector(getRegionID)
   const regionList = useSelector(getGalaxySpecificRegionList)
   const platform = useSelector(getPlatform)
   const mode = useSelector(getMode)
@@ -30,12 +30,12 @@ export function Menu() {
       Region:
       <select
         name='region'
-        value={region}
+        value={regionID}
         onChange={e => dispatch(changeRegion(e.target.value))}
       >
-        <option value='0'>--Select--</option>
-        {regionList.map((k, i) => {
-          return <option key={i} value={k.name}>{k.name} ({k.systemCount})</option>
+        <option value=''>--Select--</option>
+        {regionList.map(r => {
+          return <option key={r.id} value={r.id}>{r.name} ({r.systemCount})</option>
         })}
       </select>
       Platform:

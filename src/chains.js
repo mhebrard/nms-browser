@@ -1,5 +1,5 @@
 import { setCatalogue, setDistances, setStatus } from './features/startup/startupSlice'
-import { setGalaxyID, setRegion } from './features/menu/menuSlice'
+import { setGalaxyID, setRegionID } from './features/menu/menuSlice'
 import { CATALOGUE, DISTANCES } from './data/assets'
 import * as d3 from './d3-bundle';
 import { MODES, PLATFORMS } from './data/platforms';
@@ -24,7 +24,7 @@ function loadCatalogue() {
     // Format nodes from catalogue
     return data.reduce((res,r) => {
       // Filter Locked record only
-      if(r[keyMap['Lock Record?']] === 'Y' && r[keyMap['GalaxyID']] !== 'Null' && r[keyMap['System ID']] !== '') {
+      if(r[keyMap['Lock Record?']] === 'Y' && r[keyMap['GalaxyID']] !== 'Null' && r[keyMap['System ID']] !== '0') {
         // Galaxy > Region > Star > Platform > Mode > (name, discoverBy, discoverDate, surveyDate, bases, wiki)
         // Set galaxy
         if (res[r[keyMap['GalaxyID']]] === undefined) {
@@ -36,13 +36,14 @@ function loadCatalogue() {
         }
         const galaxy = res[r[keyMap['GalaxyID']]]
         // Set region
-        if (galaxy.regions[r[keyMap['Region']]] === undefined) {
-          galaxy.regions[r[keyMap['Region']]] = {
+        const regionID = r[keyMap['Glyph Code']].slice(4)
+        if (galaxy.regions[regionID] === undefined) {
+          galaxy.regions[regionID] = {
             regionName: r[keyMap['Region']],
             systems: []
           }
         }
-        const region = galaxy.regions[r[keyMap['Region']]]
+        const region = galaxy.regions[regionID]
         // Set system
         if (region.systems[r[keyMap['System ID']]] === undefined) {
           region.systems[r[keyMap['System ID']]] = {}
@@ -108,16 +109,16 @@ function loadCatalogue() {
           if (r[keyMap['# of planets']] !== '') { system.planetCount = r[keyMap['# of planets']] }
           if (r[keyMap['# of moons']] !== '') { system.moonCount = r[keyMap['# of moons']] }
           if (r[keyMap['Faction']] !== '') { system.faction = r[keyMap['Faction']] }
-          if (r[keyMap['LY from center (auto estimate)']] !== '') { system.ly = r[keyMap['LY from center (auto estimate)']] }
+          if (r[keyMap['LY from center (auto estimate)']] !== '') { region.ly = r[keyMap['LY from center (auto estimate)']] }
           if (r[keyMap['Water (Y/N)']] !== '') { system.water = r[keyMap['Water (Y/N)']] }
           if (r[keyMap['Economy']] !== '') { system.economy = r[keyMap['Economy']] }
           if (r[keyMap['Wealth']] !== '') { system.wealth = r[keyMap['Wealth']] }
           if (r[keyMap['e-buy']] !== '') { system.buy = r[keyMap['e-buy']] }
           if (r[keyMap['E-Sell']] !== '') { system.sell = r[keyMap['E-Sell']] }
           if (r[keyMap['Conflict']] !== '') { system.conflict = r[keyMap['Conflict']] }
-          if (r[keyMap['X Coord (dec)']] !== '') { region.cx = r[keyMap['X Coord (dec)']] }
-          if (r[keyMap['Y Coord (dec)']] !== '') { region.cy = r[keyMap['Y Coord (dec)']] }
-          if (r[keyMap['Z Coord (dec)']] !== '') { region.cz = r[keyMap['Z Coord (dec)']] }
+          if (r[keyMap['X coord DEC']] !== '') { region.cx = r[keyMap['X coord DEC']] }
+          if (r[keyMap['Y coord DEC']] !== '') { region.cy = r[keyMap['Y coord DEC']] }
+          if (r[keyMap['Z coord DEC']] !== '') { region.cz = r[keyMap['Z coord DEC']] }
           if (r[keyMap['System ID']] !== '') { system.ssi = r[keyMap['System ID']] }
           if (r[keyMap['Lock Record?']] !== '') { mode.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '') { system.phantom = r[keyMap['Phantom System?']] }
@@ -171,25 +172,25 @@ function loadCatalogue() {
           if (r[keyMap['# of planets']] !== '' && system.planetCount === undefined) { system.planetCount = r[keyMap['# of planets']] }
           if (r[keyMap['# of moons']] !== '' && system.moonCount === undefined) { system.moonCount = r[keyMap['# of moons']] }
           if (r[keyMap['Faction']] !== '' && system.faction === undefined) { system.faction = r[keyMap['Faction']] }
-          if (r[keyMap['LY from center (auto estimate)']] !== '' && system.ly === undefined) { system.ly = r[keyMap['LY from center (auto estimate)']] }
+          if (r[keyMap['LY from center (auto estimate)']] !== '' && region.ly === undefined) { region.ly = r[keyMap['LY from center (auto estimate)']] }
           if (r[keyMap['Water (Y/N)']] !== '' && system.water === undefined) { system.water = r[keyMap['Water (Y/N)']] }
           if (r[keyMap['Economy']] !== '' && system.economy === undefined) { system.economy = r[keyMap['Economy']] }
           if (r[keyMap['Wealth']] !== '' && system.wealth === undefined) { system.wealth = r[keyMap['Wealth']] }
           if (r[keyMap['e-buy']] !== '' && system.buy === undefined) { system.buy = r[keyMap['e-buy']] }
           if (r[keyMap['E-Sell']] !== '' && system.sell === undefined ) { system.sell = r[keyMap['E-Sell']] }
           if (r[keyMap['Conflict']] !== '' && system.conflict === undefined) { system.conflict = r[keyMap['Conflict']] }
-          if (r[keyMap['X Coord (dec)']] !== '' && region.cx === undefined) { region.cx = r[keyMap['X Coord (dec)']] }
-          if (r[keyMap['Y Coord (dec)']] !== '' && region.cy === undefined) { region.cy = r[keyMap['Y Coord (dec)']] }
-          if (r[keyMap['Z Coord (dec)']] !== '' && region.cz === undefined) { region.cz = r[keyMap['Z Coord (dec)']] }
+          if (r[keyMap['X coord DEC']] !== '' && region.cx === undefined) { region.cx = r[keyMap['X coord DEC']] }
+          if (r[keyMap['Y coord DEC']] !== '' && region.cy === undefined) { region.cy = r[keyMap['Y coord DEC']] }
+          if (r[keyMap['Z coord DEC']] !== '' && region.cz === undefined) { region.cz = r[keyMap['Z coord DEC']] }
           if (r[keyMap['System ID']] !== '' && system.ssi === undefined) { system.ssi = r[keyMap['System ID']] }
           if (r[keyMap['Lock Record?']] !== '' && mode.locked === undefined) { mode.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '' && system.phantom === undefined) { system.phantom = r[keyMap['Phantom System?']] }
           if (r[keyMap['NMS wiki Link']] !== '' && mode.wiki === undefined) { mode.wiki = r[keyMap['NMS wiki Link']] }
           if (r[keyMap['Star System Age (billions of years)']] !== '' && system.age === undefined) { system.age = r[keyMap['Star System Age (billions of years)']] }
           if (r[keyMap['Researchteam']] !== '' && mode.team === undefined) { mode.team = r[keyMap['Researchteam']] }
-          // if (r[keyMap['Galaxy']] !== '') { system.galaxy = r[keyMap['Galaxy']] }
-          // if (r[keyMap['Region']] !== '') { system.region = r[keyMap['Region']] }
-          // if (r[keyMap['GalaxyID']] !== '') { system.galaxyID = r[keyMap['GalaxyID']] }
+          // if (r[keyMap['Galaxy']] !== '' && system.galaxy === undefined) { system.galaxy = r[keyMap['Galaxy']] }
+          // if (r[keyMap['Region']] !== '' && system.galaxy === undefined) { system.region = r[keyMap['Region']] }
+          // if (r[keyMap['GalaxyID']] !== '' && system.galaxy === undefined) { system.galaxyID = r[keyMap['GalaxyID']] }
           if (r[keyMap['Economy Level']] !== '' && system.economyLevel === undefined) { system.economyLevel = r[keyMap['Economy Level']] }
           if (r[keyMap['Wealth Level']] !== '' && system.wealthLevel === undefined) { system.wealthLevel = r[keyMap['Wealth Level']] }
           if (r[keyMap['Conflict Level']] !== '' && system.conflictLevel === undefined) { system.conflictLevel = r[keyMap['Conflict Level']] }
@@ -209,10 +210,12 @@ function loadDistances() {
     return data.reduce((res,r) => {
       if (r['Star system A'] !== '') {
         res.push({
+          sourceName: r['System Name A'],
           sourceRegion: r['Region A'],
-          source: r['SSI A'],
+          source: r['Glyphs A'],
+          sourceTarget: r['System Name B'],
           targetRegion: r['Region B'],
-          target: r['SSI B'],
+          target: r['Glyphs B'],
           distance: parseInt(r['Inter System Distance (ly)'])
         })
         return res
@@ -233,6 +236,7 @@ export const loadData = () => dispatch => {
     dispatch(setDistances(data[1]))
     dispatch(setStatus('Full'))
   })
+  .catch(() => dispatch(setStatus('NoData')))
 }
 
 export const changeGalaxy = galaxyID => dispatch => {
@@ -242,9 +246,9 @@ export const changeGalaxy = galaxyID => dispatch => {
   dispatch(setGalaxyID(galaxyID))
 }
 
-export const changeRegion = region => dispatch => {
+export const changeRegion = regionID => dispatch => {
   // Display galaxy scene
   dispatch(setStatus('Region'))
   // Set Menu
-  dispatch(setRegion(region))
+  dispatch(setRegionID(regionID))
 }

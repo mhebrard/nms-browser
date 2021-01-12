@@ -8,7 +8,7 @@ export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
     galaxyID: 0,
-    region: '',
+    regionID: '',
     category: CATEGORIES.star,
     platform: PLATFORMS.pc,
     mode: MODES.normal
@@ -17,8 +17,8 @@ export const menuSlice = createSlice({
     setGalaxyID: (state, action) => {
       state.galaxyID = action.payload
     },
-    setRegion: (state, action) => {
-      state.region = action.payload
+    setRegionID: (state, action) => {
+      state.regionID = action.payload
     },
     setCategory: (state, action) => {
       state.category = action.payload;
@@ -33,11 +33,11 @@ export const menuSlice = createSlice({
 });
 
 // Actions
-export const { setGalaxyID, setRegion, setCategory, setPlatform, setMode } = menuSlice.actions;
+export const { setGalaxyID, setRegionID, setCategory, setPlatform, setMode } = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;
-export const getRegion = state => state.menu.region;
+export const getRegionID = state => state.menu.regionID;
 export const getCategory = state => state.menu.category;
 export const getPlatform = state => state.menu.platform;
 export const getMode = state => state.menu.mode;
@@ -63,9 +63,10 @@ export const getGalaxySpecificRegionList = createSelector(
       return Object.keys(regions).map(k => {
         return {
           name: regions[k].regionName,
+          id: k,
           systemCount: regions[k].systems.filter(s => s !== undefined).length
         }
-      })
+      }).sort((a, b) => a.name.localeCompare(b.name))
     } else {
       return []
     }
