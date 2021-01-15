@@ -48,11 +48,13 @@ export const getNeighbourRegionSystemList = createSelector(
       if (neighbourList.includes(r)) {
         res = res.concat(
           current.systems.filter(s => s !== undefined).map(s => {
+            const rid = s.glyphs.slice(4)
             return {...s, 
               cx: centerX - oriX, 
               cy: centerY - oriY, 
               cz: centerZ - oriZ,
-              regionID: s.glyphs.slice(4)
+              regionID: rid,
+              regionName: catalogue[galaxyID].regions[rid].regionName
             }
           })
         )

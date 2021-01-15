@@ -1,7 +1,7 @@
 .abs {
   position: absolute;
-  top:0;
-  left:0;
+  bottom:5px;
+  right:5px;
 }
 .content {
   color:white;

@@ -121,8 +121,6 @@ export function Tooltip() {
 
   const styleDyn = {
     opacity: visible ? 1 : 0,
-    top: `${pos.y}px`,
-    left: `${pos.x}px`
   };
 
   return (
@@ -130,6 +128,9 @@ export function Tooltip() {
       style={styleDyn}>
       <div className={[styles.flex, styles.bold].join(" ")}>
         { node ? node[platform][mode].name || node.name || '[unknown]' : null }
+      </div>
+      <div className={[styles.flex].join(" ")}>
+        { node ? node.regionName : null }
       </div>
       <div className={[styles.flex].join(" ")}>
         <div className={styles.col}>
