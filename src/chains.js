@@ -1,6 +1,6 @@
 import { setCatalogue, setDistances, setStatus } from './features/startup/startupSlice'
 import { setGalaxyID, setRegionID } from './features/menu/menuSlice'
-import { CATALOGUE, DISTANCES } from './data/assets'
+import { CATALOGUE, INTERREGION, INTRAREGION } from './data/assets'
 import * as d3 from './d3-bundle';
 import { MODES, PLATFORMS } from './data/platforms';
 
@@ -13,9 +13,9 @@ function loadSheets(url) {
 }
 
 // Data: Load region's star system from catalogue
-function loadCatalogue() {
+function loadCatalogue(url) {
   console.log('Load star systems catalogue...')
-  return loadSheets(CATALOGUE)
+  return loadSheets(url)
   .then(data => {
     console.log('chain / loadCatalogue OK')
     // Get keys
@@ -202,13 +202,13 @@ function loadCatalogue() {
 }
 
 // Data: Load region's star system distances
-function loadDistances() {
+function loadDistances(url) {
   console.log('Load star systems distances...')
-  return loadSheets(DISTANCES)
+  return loadSheets(url)
   .then(data => {
     console.log('chain / loadDistances OK')
     return data.reduce((res,r) => {
-      if (r['Star system A'] !== '') {
+      if (r['System Name A'] !== '') {
         res.push({
           sourceName: r['System Name A'],
           sourceRegion: r['Region A'],
@@ -218,8 +218,8 @@ function loadDistances() {
           target: r['Glyphs B'],
           distance: parseInt(r['Inter System Distance (ly)'])
         })
-        return res
       }
+      return res
     },[]);
   })
 }
@@ -228,15 +228,20 @@ function loadDistances() {
 export const loadData = () => dispatch => {
   // return Promise.all([loadCatalogue(region), getDistances(region)])
   dispatch(setStatus('Loading'))
-  return Promise.all([loadCatalogue(), loadDistances()])
+  return Promise.all([loadCatalogue(CATALOGUE), loadDistances(INTRAREGION), loadDistances(INTERREGION)])
   .then(data => {
     console.log('loadData / catalogue', data[0])
+    console.log('loadData / inter-region', data[1])
+    console.log('loadData / intra-region', data[2])
     // Save full catalogue
     dispatch(setCatalogue(data[0]))
-    dispatch(setDistances(data[1]))
+    dispatch(setDistances(data[1].concat(data[2])))
     dispatch(setStatus('Full'))
   })
-  .catch(() => dispatch(setStatus('NoData')))
+  .catch(err => {
+    console.log(err)
+    dispatch(setStatus('NoData'))
+  })
 }
 
 export const changeGalaxy = galaxyID => dispatch => {
