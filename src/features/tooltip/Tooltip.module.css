@@ -1,39 +1,41 @@
-.abs {
+.sidenav {
   position: absolute;
-  bottom:5px;
-  right:5px;
+  top:0;
+  bottom: 0;
+  right:0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 99vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 1;
 }
-.content {
-  color:white;
-  background-color: rgba(0,0,0,0.7);
-  padding: 5px;
-  pointer-events: none;
-  z-index: 2;
+.sidenav div {
+  display: flex;
+  align-items: center;
 }
 .tronbox {
   border-radius: 3px;
   border: 1px #80EAFF solid;
   box-shadow: 0 0 3px #22AFCA, inset 0 0 3px #22AFCA;
 }
-.flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.content {
+  color: white;
 }
-.col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+img {
+  height: 24px;
+  width: 24px;
+  margin: 3px;
 }
-.img{
-  max-width: 50px;
-  max-height: 50px;
+
+/* Scroll bar */
+::-webkit-scrollbar {
+  width: 3px;
 }
-.badge {
-  position: relative;
-  bottom: 25px;
-}
-.bold {
-  font-weight: bold;
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:  #80EAFF; /*#22AFCA;*/
+  border-radius: 1px;
 }

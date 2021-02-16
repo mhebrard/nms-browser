@@ -54,7 +54,10 @@ export const getNeighbourRegionSystemList = createSelector(
               cy: centerY - oriY, 
               cz: centerZ - oriZ,
               regionID: rid,
-              regionName: catalogue[galaxyID].regions[rid].regionName
+              regionName: catalogue[galaxyID].regions[rid].regionName,
+              regionLY: catalogue[galaxyID].regions[rid].ly,
+              galaxyID: galaxyID,
+              galaxyName: catalogue[galaxyID].galaxyName
             }
           })
         )

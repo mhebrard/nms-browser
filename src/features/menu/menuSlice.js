@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { createSlice } from '@reduxjs/toolkit';
 import { getCatalogue } from '../startup/startupSlice';
 import { CATEGORIES } from '../../data/categories';
-import { MODES, PLATFORMS } from '../../data/platforms';
+import { PLATFORMS } from '../../data/platforms';
 
 export const menuSlice = createSlice({
   name: 'menu',
@@ -11,7 +11,7 @@ export const menuSlice = createSlice({
     regionID: '',
     category: CATEGORIES.star,
     platform: PLATFORMS.pc,
-    mode: MODES.normal
+    node: ''
   },
   reducers: {
     setGalaxyID: (state, action) => {
@@ -26,21 +26,21 @@ export const menuSlice = createSlice({
     setPlatform: (state, action) => {
       state.platform = action.payload;
     },
-    setMode: (state, action) => {
-      state.mode = action.payload;
-    },
+    setNode: (state, action) => {
+      state.node = action.payload;
+    }
   }
 });
 
 // Actions
-export const { setGalaxyID, setRegionID, setCategory, setPlatform, setMode } = menuSlice.actions;
+export const { setGalaxyID, setRegionID, setCategory, setPlatform, setNode} = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;
 export const getRegionID = state => state.menu.regionID;
 export const getCategory = state => state.menu.category;
 export const getPlatform = state => state.menu.platform;
-export const getMode = state => state.menu.mode;
+export const getNode = state => state.menu.node;
 
 // Memoized Selectors
 export const getGalaxyList = createSelector(

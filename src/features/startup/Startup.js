@@ -44,7 +44,7 @@ export function Startup() {
       <div className={styles.status}>{status}</div>
       {status === "NoData" ? <LoadButton/> : null}
       {status === "Full" || status === "Galaxy" || status === "Region" ? <Menu/> : null}
-      {status === "Region" ? <Tooltip /> : null}
+      {status === "Galaxy" || status === "Region" ? <Tooltip /> : null}
       {status === "Galaxy" ? <Galaxy/> : null}
     </div>
   )

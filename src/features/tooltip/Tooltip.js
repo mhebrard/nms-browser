@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-import { isVisible, getNode, getPosition} from './tooltipSlices';
+import { getNode } from '../menu/menuSlice';
+import { isVisible, getPosition} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 import img_default from '../../img/SYSTEM.png'
@@ -21,14 +21,44 @@ import img_rank0 from '../../img/RANK.0.png';
 import img_rank1 from '../../img/RANK.1.png';
 import img_rank2 from '../../img/RANK.2.png';
 import img_rank3 from '../../img/RANK.3.png';
-import { getMode, getPlatform } from '../menu/menuSlice';
+import { getPlatform } from '../menu/menuSlice';
+
+function Info() {
+  const node = useSelector(getNode)
+  return (
+    <div className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}>
+      <div><img/>Status:</div>
+      <div><img/>Galaxy: {node.galaxyName}</div>
+      <div><img/>Region: {node.regionName}</div>
+      <div><img/>Original: {node.name || 'unknown'} </div>
+      <div><img/>PC: {node['PC'].name || node.name || '[unknown]'}</div>
+      <div><img/>PS4: {node['PS4'].name || node.name || '[unknown]'}</div>
+      <div><img/>Xbox: {node['XBOX'].name || node.name || '[unknown]'}</div>
+      <div><img/>Coords: {node.coordinates}</div>
+      <div><img/>Glyphs: {node.glyphs}</div>
+      <div><img/>LY: {node.regionLY} - Water: {node.water}</div>
+      <div><img/>Stars: {node.starCount} - {node.starClass} ({node.starColor})</div>
+      <div><img/>{node.planetCount} Planet - {node.moonCount} Moon</div>
+      <div><img/>Faction: {node.faction}</div>
+      <div><img/>Economy: {node.economy}</div>
+      <div><img/>Wealth: {node.wealth} ({node.wealthLevel})</div>
+      <div><img/>Buy: {node.buy}% - Sell: {node.sell}%</div>
+      <div><img/>Confict: {node.conflict} ({node.conflictLevel})</div>
+      <div><img/>Discovered by {node.discoveredBy || '?'}</div>
+      <div><img/>Discovered on {node.discoveryDate || '?'}</div>
+      <div><img/>Surveyed by {node.surveyedBy}</div>
+      <div><img/>Surveyed on {node.surveyDate}</div>
+      <div><img/>Release: {node.release}</div>
+      <div><img/>Civ: {node.civilized}</div>
+    </div>
+  )
+}
 
 export function Tooltip() {
   const visible = useSelector(isVisible)
   const node = useSelector(getNode)
   const pos = useSelector(getPosition)
   const platform = useSelector(getPlatform)
-  const mode = useSelector(getMode)
 
   let img_race = img_default
   let img_eco = img_default
@@ -123,30 +153,5 @@ export function Tooltip() {
     opacity: visible ? 1 : 0,
   };
 
-  return (
-    <div className={[styles.abs, styles.tronbox, styles.content].join(" ")}
-      style={styleDyn}>
-      <div className={[styles.flex, styles.bold].join(" ")}>
-        { node ? node[platform][mode].name || node.name || '[unknown]' : null }
-      </div>
-      <div className={[styles.flex].join(" ")}>
-        { node ? node.regionName : null }
-      </div>
-      <div className={[styles.flex].join(" ")}>
-        <div className={styles.col}>
-          <img src={img_race} className={styles.img} alt="faction"/>
-          <img src={img_rank0} alt="faction"/>
-        </div>
-        <div className={styles.col}>
-          <img src={img_eco} className={styles.img} alt="economy"/>
-          <img src={img_wealth} alt="economy"/>
-        </div>
-        <div className={styles.col}>
-          <img src={img_conflict} className={styles.img} alt="conflict"/>
-          <img src={img_war} alt="conflict"/>
-        </div>
-      </div>
-      <div><small>Sell: {node ? node.sell : 0}% / Buy: {node ? node.buy : 0}%</small></div>
-    </div>
-  )
+  return node ? (<Info/>) : (null)
 }

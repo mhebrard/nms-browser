@@ -4,10 +4,10 @@ import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from '../../three-bundle'
 import * as d3 from '../../d3-bundle'
 import { COLORS } from '../../data/categories'
-import { getNeighbourRegionDistancesList, getNeighbourRegionSystemList, getRegionSpecificDistancesList, getRegionSpecificSystemList, setSystems } from './regionSlice';
-import { getCategory, getMode, getPlatform, getRegionID } from '../menu/menuSlice';
+import { getNeighbourRegionDistancesList, getNeighbourRegionSystemList, setSystems } from './regionSlice';
+import { getCategory, getPlatform, getRegionID, setNode } from '../menu/menuSlice';
 import { circle } from '../../data/assets';
-import { setVisibility, setPosition, setNode } from '../tooltip/tooltipSlices'
+import { setVisibility } from '../tooltip/tooltipSlices'
 
 export function Region() {
   const dispatch = useDispatch()
@@ -24,8 +24,6 @@ export function Region() {
   const regionID = useSelector(getRegionID)
   const category = useSelector(getCategory)
   const platform = useSelector(getPlatform)
-  const mode = useSelector(getMode)
-
   const scale = 10
   
   
@@ -59,19 +57,18 @@ export function Region() {
   // Display tooltip
   function onClickHandler(n, ref) {
     // console.log('onClickHandler',n['PC']['Normal'].name, '-', n.region, '<>',region, '-', n.region === region ? COLORS[n[category]] || 'uncharted' : 'outRegion',)
-    
-    const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
-    // console.log(n, pos)
-    dispatch(setPosition({x: pos.x, y: pos.y}))
+    // const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
+    // console.log(n)
+    // dispatch(setPosition({x: pos.x, y: pos.y}))
     dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
     dispatch(setVisibility(true))
   }
 
   // Move toward node
   function onRightClickHandler(n, ref) {
-    console.log('onRightClickHandler')
+    // console.log('onRightClickHandler')
     // Hide tooltip
-    dispatch(setVisibility(false))
+    // dispatch(setVisibility(false))
 
     // Aim at node from outside it
     const distance = 120;
@@ -113,7 +110,7 @@ export function Region() {
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
       linkVisibility={true}
-      nodeLabel={n => n[platform][mode].name || n.name || '[unknown]' }
+      nodeLabel={n => n[platform].name || n.name || '[unknown]' }
       // onNodeHover={n => onHoverHandler(n, ref)}
       onNodeClick={n => onClickHandler(n, ref)}
       onNodeRightClick={n => onRightClickHandler(n, ref)}

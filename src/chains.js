@@ -2,13 +2,15 @@ import { setCatalogue, setDistances, setStatus } from './features/startup/startu
 import { setGalaxyID, setRegionID } from './features/menu/menuSlice'
 import { CATALOGUE, INTERREGION, INTRAREGION } from './data/assets'
 import * as d3 from './d3-bundle';
-import { MODES, PLATFORMS } from './data/platforms';
+import { PLATFORMS } from './data/platforms';
 
 // Data: Load spreadsheets into array
 function loadSheets(url) {
-  const cors = `https://cors-anywhere.herokuapp.com/${url}`
   // console.log('d3:', d3)
-  return d3.tsv(cors)
+  // d3.csv("/path/to/file.csv")
+  // .header("header-name", "header-value")
+  // Access-Control-Allow-Origin: *.
+  return d3.tsv(url)
     .then(data => data)
 }
 
@@ -25,7 +27,7 @@ function loadCatalogue(url) {
     return data.reduce((res,r) => {
       // Filter Locked record only
       if(r[keyMap['Lock Record?']] === 'Y' && r[keyMap['GalaxyID']] !== 'Null' && r[keyMap['System ID']] !== '0') {
-        // Galaxy > Region > Star > Platform > Mode > (name, discoverBy, discoverDate, surveyDate, bases, wiki)
+        // Galaxy > Region > Star > Platform > (name, discoverBy, discoverDate, surveyDate, bases, wiki)
         // Set galaxy
         if (res[r[keyMap['GalaxyID']]] === undefined) {
           res[r[keyMap['GalaxyID']]] = {
@@ -49,60 +51,53 @@ function loadCatalogue(url) {
           region.systems[r[keyMap['System ID']]] = {}
         }
         const system = region.systems[r[keyMap['System ID']]]
-        // Set platform & mode
+        // Set platform
         if (system[r[keyMap['Platform']]] === undefined) {
           Object.keys(PLATFORMS).forEach(p => {
             system[PLATFORMS[p]] = {}
-            Object.keys(MODES).forEach(m => {
-              system[PLATFORMS[p]][MODES[m]] = {}
-            })
           })
         }
         const platform = system[r[keyMap['Platform']].toUpperCase()]
-        const mode = platform[r[keyMap['Mode']]]
         // Check date
         const prevSurvey = system.surveyDate !== undefined ? new Date(system.surveyDate).setHours(0, 0, 0, 0) : new Date(0)
         const currSurvey = r[keyMap['Survey Date']] !== '' ? new Date(r[keyMap['Survey Date']]).setHours(0, 0, 0, 0) : new Date(r[keyMap['Discovery Date']]).setHours(0, 0, 0, 0)
         // Fill new (undef or recent record)
         if (system.surveyDate === undefined || (prevSurvey < currSurvey)) {
-          if (r[keyMap['PC System Name']] !== '') { system['PC'][r[keyMap['Mode']]].name = r[keyMap['PC System Name']] }
-          if (r[keyMap['PS4 System Name']] !== '') { system['PS4'][r[keyMap['Mode']]].name = r[keyMap['PS4 System Name']] }
-          if (r[keyMap['Xbox System Name']] !== '') { system['XBOX'][r[keyMap['Mode']]].name = r[keyMap['Xbox System Name']] }
+          if (r[keyMap['PC System Name']] !== '') { system['PC'].name = r[keyMap['PC System Name']] }
+          if (r[keyMap['PS4 System Name']] !== '') { system['PS4'].name = r[keyMap['PS4 System Name']] }
+          if (r[keyMap['Xbox System Name']] !== '') { system['XBOX'].name = r[keyMap['Xbox System Name']] }
           if (r[keyMap['Original Sys Name']] !== '') { system.name = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Galactic Coordinates']] !== '') { system.coordinates = r[keyMap['Galactic Coordinates']] }
           if (r[keyMap['Glyph Code']] !== '') { system.glyphs = r[keyMap['Glyph Code']] }
-          if (r[keyMap['Original Sys Name']] !== '') { system.name = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Discovery Date']] !== '') {
             const prevDisco = system.dicoveryDate !== undefined ? new Date(system.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
-            const modeDisco = mode.dicoveryDate !== undefined ? new Date(mode.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
+            const platformDisco = platform.dicoveryDate !== undefined ? new Date(platform.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
             const currDisco = r[keyMap['Discovery Date']] !== '' ? new Date(r[keyMap['Discovery Date']]).setHours(0, 0, 0, 0) : new Date(0)
             if (system.discoveryDate === undefined || (currDisco < prevDisco)) { // Dicovered earlier
               system.discoveryDate = r[keyMap['Discovery Date']]
               system.discoveredBy = r[keyMap['Discovered by']]
               system.dicoveredPlatform = r[keyMap['Platform']]
-              system.dicoveredMode = r[keyMap['Mode']]
             }
-            if (mode.discoveryDate === undefined || (currDisco < modeDisco)) {
-              mode.discoveryDate = r[keyMap['Discovery Date']]
-              mode.discoveredBy = r[keyMap['Discovered by']]
+            if (platform.discoveryDate === undefined || (currDisco < platformDisco)) {
+              platform.discoveryDate = r[keyMap['Discovery Date']]
+              platform.discoveredBy = r[keyMap['Discovered by']]
             }
           }
           if (r[keyMap['Survey Date']] !== '') {
             system.surveyDate = r[keyMap['Survey Date']]
             system.surveyedBy = r[keyMap['Source']]
             system.surveyedPlatform = r[keyMap['Platform']]
-            system.surveyedMode = r[keyMap['Mode']]
             system.release = r[keyMap['Release']]
-            // Mode specific dates
-            const modeSurvey = mode.surveyDate !== undefined ? new Date(mode.surveyDate).setHours(0, 0, 0, 0) : new Date(0)
-            if (mode.surveyDate === undefined || (modeSurvey < currSurvey)) {
-              mode.surveyDate = r[keyMap['Survey Date']]
-              mode.surveyedBy = r[keyMap['Source']]
-              mode.release = r[keyMap['Release']]
+            // Platform specific dates
+            const platformSurvey = platform.surveyDate !== undefined ? new Date(platform.surveyDate).setHours(0, 0, 0, 0) : new Date(0)
+            if (platform.surveyDate === undefined || (platformSurvey < currSurvey)) {
+              platform.surveyDate = r[keyMap['Survey Date']]
+              platform.surveyedBy = r[keyMap['Source']]
+              platform.release = r[keyMap['Release']]
             }
           }
           if (r[keyMap['Civilized?']] !== '') { system.civilized = r[keyMap['Civilized?']] }
-          if (r[keyMap['Bases']] !== '') { mode.bases = r[keyMap['Bases']] }
+          if (r[keyMap['Bases']] !== '') { platform.bases = r[keyMap['Bases']] }
           if (r[keyMap['Multiple stars?']] !== '') { system.starCount = r[keyMap['Multiple stars?']] }
           if (r[keyMap['Category']] !== '') { system.starClass = r[keyMap['Category']] }
           if (r[keyMap['Color']] !== '') { system.starColor = r[keyMap['Color']] }
@@ -120,11 +115,11 @@ function loadCatalogue(url) {
           if (r[keyMap['Y coord DEC']] !== '') { region.cy = r[keyMap['Y coord DEC']] }
           if (r[keyMap['Z coord DEC']] !== '') { region.cz = r[keyMap['Z coord DEC']] }
           if (r[keyMap['System ID']] !== '') { system.ssi = r[keyMap['System ID']] }
-          if (r[keyMap['Lock Record?']] !== '') { mode.locked = r[keyMap['Lock Record?']] }
+          if (r[keyMap['Lock Record?']] !== '') { platform.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '') { system.phantom = r[keyMap['Phantom System?']] }
-          if (r[keyMap['NMS wiki Link']] !== '') { mode.wiki = r[keyMap['NMS wiki Link']] }
+          if (r[keyMap['NMS wiki Link']] !== '') { platform.wiki = r[keyMap['NMS wiki Link']] }
           if (r[keyMap['Star System Age (billions of years)']] !== '') { system.age = r[keyMap['Star System Age (billions of years)']] }
-          if (r[keyMap['Researchteam']] !== '') { mode.team = r[keyMap['Researchteam']] }
+          if (r[keyMap['Researchteam']] !== '') { platform.team = r[keyMap['Researchteam']] }
           // if (r[keyMap['Galaxy']] !== '') { system.galaxy = r[keyMap['Galaxy']] }
           // if (r[keyMap['Region']] !== '') { system.region = r[keyMap['Region']] }
           // if (r[keyMap['GalaxyID']] !== '') { system.galaxyID = r[keyMap['GalaxyID']] }
@@ -133,39 +128,37 @@ function loadCatalogue(url) {
           if (r[keyMap['Conflict Level']] !== '') { system.conflictLevel = r[keyMap['Conflict Level']] }
         } 
         else { // Fill blank from older record
-          if (r[keyMap['PC System Name']] !== '' && system['PC'][r[keyMap['Mode']]].name === undefined) { system['PC'][r[keyMap['Mode']]].name = r[keyMap['PC System Name']] }
-          if (r[keyMap['PS4 System Name']] !== '' && system['PS4'][r[keyMap['Mode']]].name === undefined) { system['PS4'][r[keyMap['Mode']]].name = r[keyMap['PS4 System Name']] }
-          if (r[keyMap['Xbox System Name']] !== '' && system['XBOX'][r[keyMap['Mode']]].name === undefined) { system['XBOX'][r[keyMap['Mode']]].name = r[keyMap['Xbox System Name']] }
+          if (r[keyMap['PC System Name']] !== '' && system['PC'].name === undefined) { system['PC'].name = r[keyMap['PC System Name']] }
+          if (r[keyMap['PS4 System Name']] !== '' && system['PS4'].name === undefined) { system['PS4'].name = r[keyMap['PS4 System Name']] }
+          if (r[keyMap['Xbox System Name']] !== '' && system['XBOX'].name === undefined) { system['XBOX'].name = r[keyMap['Xbox System Name']] }
           if (r[keyMap['Original Sys Name']] !== '' && system.name === undefined) { system.name = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Galactic Coordinates']] !== '' && system.coordinates === undefined) { system.coordinates = r[keyMap['Galactic Coordinates']] }
           if (r[keyMap['Glyph Code']] !== '' && system.glyphs === undefined) { system.glyphs = r[keyMap['Glyph Code']] }
-          if (r[keyMap['Original Sys Name']] !== '' && system.name === undefined) { system.name = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Discovery Date']] !== '') {
             const prevDisco = system.discoveryDate !== undefined ? new Date(system.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
-            const modeDisco = mode.discoveryDate !== undefined ? new Date(mode.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
+            const platformDisco = platform.discoveryDate !== undefined ? new Date(platform.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
             const currDisco = r[keyMap['Discovery Date']] !== '' ? new Date(r[keyMap['Discovery Date']]).setHours(0, 0, 0, 0) : new Date(0)
             if (system.discoveryDate === undefined || (currDisco < prevDisco)) { // Dicovered earlier
               system.discoveryDate = r[keyMap['Discovery Date']]
               system.discoveredBy = r[keyMap['Discovered by']]
               system.dicoveredPlatform = r[keyMap['Platform']]
-              system.dicoveredMode = r[keyMap['Mode']]
             }
-            if (mode.discoveryDate === undefined || (currDisco < modeDisco)) {
-              mode.discoveryDate = r[keyMap['Discovery Date']]
-              mode.discoveredBy = r[keyMap['Discovered by']]
+            if (platform.discoveryDate === undefined || (currDisco < platformDisco)) {
+              platform.discoveryDate = r[keyMap['Discovery Date']]
+              platform.discoveredBy = r[keyMap['Discovered by']]
             }
           }
           if (r[keyMap['Survey Date']] !== '') {
-            // Mode specific dates
-            const modeSurvey = mode.surveyDate !== undefined ? new Date(mode.surveyDate).setHours(0, 0, 0, 0) : new Date(0)
-            if (mode.surveyDate === undefined || (modeSurvey < currSurvey)) {
-              mode.surveyDate = r[keyMap['Survey Date']]
-              mode.surveyedBy = r[keyMap['Source']]
-              mode.release = r[keyMap['Release']]
+            // Platform specific dates
+            const platformSurvey = platform.surveyDate !== undefined ? new Date(platform.surveyDate).setHours(0, 0, 0, 0) : new Date(0)
+            if (platform.surveyDate === undefined || (platformSurvey < currSurvey)) {
+              platform.surveyDate = r[keyMap['Survey Date']]
+              platform.surveyedBy = r[keyMap['Source']]
+              platform.release = r[keyMap['Release']]
             }
           }
           if (r[keyMap['Civilized?']] !== '' && system.civilized === undefined) { system.civilized = r[keyMap['Civilized?']] }
-          if (r[keyMap['Bases']] !== '' && mode.bases === undefined) { mode.bases = r[keyMap['Bases']] }
+          if (r[keyMap['Bases']] !== '' && platform.bases === undefined) { platform.bases = r[keyMap['Bases']] }
           if (r[keyMap['Multiple stars?']] !== '' && system.starCount === undefined) { system.starCount = r[keyMap['Multiple stars?']] }
           if (r[keyMap['Category']] !== '' && system.starClass === undefined) { system.starClass = r[keyMap['Category']] }
           if (r[keyMap['Color']] !== '' && system.starColor === undefined) { system.starColor = r[keyMap['Color']] }
@@ -183,11 +176,11 @@ function loadCatalogue(url) {
           if (r[keyMap['Y coord DEC']] !== '' && region.cy === undefined) { region.cy = r[keyMap['Y coord DEC']] }
           if (r[keyMap['Z coord DEC']] !== '' && region.cz === undefined) { region.cz = r[keyMap['Z coord DEC']] }
           if (r[keyMap['System ID']] !== '' && system.ssi === undefined) { system.ssi = r[keyMap['System ID']] }
-          if (r[keyMap['Lock Record?']] !== '' && mode.locked === undefined) { mode.locked = r[keyMap['Lock Record?']] }
+          if (r[keyMap['Lock Record?']] !== '' && platform.locked === undefined) { platform.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '' && system.phantom === undefined) { system.phantom = r[keyMap['Phantom System?']] }
-          if (r[keyMap['NMS wiki Link']] !== '' && mode.wiki === undefined) { mode.wiki = r[keyMap['NMS wiki Link']] }
+          if (r[keyMap['NMS wiki Link']] !== '' && platform.wiki === undefined) { platform.wiki = r[keyMap['NMS wiki Link']] }
           if (r[keyMap['Star System Age (billions of years)']] !== '' && system.age === undefined) { system.age = r[keyMap['Star System Age (billions of years)']] }
-          if (r[keyMap['Researchteam']] !== '' && mode.team === undefined) { mode.team = r[keyMap['Researchteam']] }
+          if (r[keyMap['Researchteam']] !== '' && platform.team === undefined) { platform.team = r[keyMap['Researchteam']] }
           // if (r[keyMap['Galaxy']] !== '' && system.galaxy === undefined) { system.galaxy = r[keyMap['Galaxy']] }
           // if (r[keyMap['Region']] !== '' && system.galaxy === undefined) { system.region = r[keyMap['Region']] }
           // if (r[keyMap['GalaxyID']] !== '' && system.galaxy === undefined) { system.galaxyID = r[keyMap['GalaxyID']] }
