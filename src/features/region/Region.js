@@ -2,27 +2,34 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ForceGraph3D from 'react-force-graph-3d'
 import * as THREE from '../../three-bundle'
+import * as d3 from '../../d3-bundle'
 import { COLORS } from '../../data/categories'
-import { getRegionSpecificDistancesList, getRegionSpecificSystemList } from './regionSlice';
-import { getCategory, getMode, getPlatform } from '../menu/menuSlice';
+import { getNeighbourRegionDistancesList, getNeighbourRegionSystemList, setSystems } from './regionSlice';
+import { getCategory, getPlatform, getRegionID, setNode } from '../menu/menuSlice';
 import { circle } from '../../data/assets';
-import { setVisibility, setPosition, setNode } from '../tooltip/tooltipSlices'
+import { setVisibility } from '../tooltip/tooltipSlices'
 
 export function Region() {
+  const dispatch = useDispatch()
   // Get systems data
-  const systems = useSelector(getRegionSpecificSystemList)
-  const nodes = systems.map(d => { return {...d, id: d.ssi}} )
-  const distances = useSelector(getRegionSpecificDistancesList)
+  // const systems = useSelector(getRegionSpecificSystemList)
+  const systems = useSelector(getNeighbourRegionSystemList)
+  const nodes = systems.map(d => { return {...d, id: d.glyphs}} )
+  dispatch(setSystems(systems))
+  // const distances = useSelector(getRegionSpecificDistancesList)
+  const distances = useSelector(getNeighbourRegionDistancesList)
   const links = distances.map(d => { return {...d} })
+
+  // console.log('distances', distances)
+  const regionID = useSelector(getRegionID)
   const category = useSelector(getCategory)
   const platform = useSelector(getPlatform)
-  const mode = useSelector(getMode)
-
   const scale = 10
-  const dispatch = useDispatch()
+  
   
   // Create Object
   function objectHandler(n) {
+    // console.log('objectHandler',n['PC']['Normal'].name, '-', n.region, '<>',region, '-', n.region === region ? n[category] || 'uncharted' : 'outRegion',)
     // use a sphere as a drag handle
     const obj = new THREE.Mesh(
         new THREE.SphereGeometry(7),
@@ -36,7 +43,7 @@ export function Region() {
     // add img sprite as child
     const material = new THREE.SpriteMaterial(
       { 
-        color: COLORS[n[category]] || '#ffffff',
+        color: n.regionID === regionID ? COLORS[n[category]] || '#ffffff' : '#800080',
         map: circle
       }
     );
@@ -46,45 +53,22 @@ export function Region() {
   
     return obj;
   }
-  
-  // function onClickHandler(n, ref) {
-  //   // Aim at node from outside it
-  //   const distance = 120;
-  //   const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
-  
-  //   ref.current.cameraPosition(
-  //     { x: n.x * distRatio, y: n.y * distRatio, z: n.z * distRatio }, // new position
-  //     n, // lookAt ({ x, y, z })
-  //     3000  // ms transition duration
-  //   );
-  // }
-
-  // function onHoverHandler(n, ref) {
-  //   if (n) {
-  //     const vector = new THREE.Vector3(n.x,n.y,n.z)
-  //     const canvas = ref.current.renderer().domElement
-  //     vector.project(ref.current.camera())
-  //     vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio));
-  //     vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio));
-  //     dispatch(setPosition({x:vector.x, y:vector.y}))
-  //     dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
-  //   }
-  //   dispatch(setVisibility(n ? true : false))  
-  // }
 
   // Display tooltip
   function onClickHandler(n, ref) {
-    const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
-    console.log(n, pos)
-    dispatch(setPosition({x: pos.x, y: pos.y}))
+    // console.log('onClickHandler',n['PC']['Normal'].name, '-', n.region, '<>',region, '-', n.region === region ? COLORS[n[category]] || 'uncharted' : 'outRegion',)
+    // const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
+    // console.log(n)
+    // dispatch(setPosition({x: pos.x, y: pos.y}))
     dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
     dispatch(setVisibility(true))
   }
 
   // Move toward node
   function onRightClickHandler(n, ref) {
+    // console.log('onRightClickHandler')
     // Hide tooltip
-    dispatch(setVisibility(false))
+    // dispatch(setVisibility(false))
 
     // Aim at node from outside it
     const distance = 120;
@@ -110,6 +94,11 @@ export function Region() {
 
       // Force distance
       ref.current.d3Force('link').distance(n => n.distance);
+      // Force region
+      ref.current.d3Force('x', d3.forceX(n => n.cx*1000).strength(0.01));
+      ref.current.d3Force('y', d3.forceY(n => n.cy*1000).strength(0.01));
+      ref.current.d3Force('z', d3.forceZ(n => n.cz*1000).strength(0.01));
+
     }, [])
 
     return <ForceGraph3D
@@ -121,11 +110,11 @@ export function Region() {
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
       linkVisibility={true}
-      nodeLabel={n => n[platform][mode].name || n.name || '[unknown]' }
+      nodeLabel={n => n[platform].name || n.name || '[unknown]' }
       // onNodeHover={n => onHoverHandler(n, ref)}
       onNodeClick={n => onClickHandler(n, ref)}
       onNodeRightClick={n => onRightClickHandler(n, ref)}
-      onBackgroundClick={() => dispatch(setVisibility(false))}
+      onBackgroundClick={() => { console.log('onBackgroundClick'); dispatch(setVisibility(false))} }
     />
   }
 

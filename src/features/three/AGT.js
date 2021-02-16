@@ -98,41 +98,42 @@ export function AGT(props) {
       {...props}
       ref={mesh}
       position={[0,0,0]}
-      onClick={(event) => dispatch(loadData())}
-      onPointerOver={(event) => setHover(true)}
-      onPointerOut={(event) => setHover(false)}>
-        <mesh> {/* Octahedron */}
-          <geometry attach="geometry" vertices={octVertices} faces={octFaces} onUpdate={self => self.computeFaceNormals()}/>
-          <meshStandardMaterial attach="material" color={hovered ? 'orange' : 'gray'} opacity={0.5} transparent/>
-        </mesh>
-        <mesh> {/* Sphere */}
-          <sphereBufferGeometry args={[0.6, 10, 10]} />
-          <meshStandardMaterial attach="material" color='black' />
-        </mesh>
-        <mesh> {/* Top */}
-          <geometry attach="geometry" vertices={topVertices} faces={topFaces} onUpdate={self => self.computeFaceNormals()}/>
-          <meshStandardMaterial attach="material" color="white"/>
-        </mesh>
-        <mesh> {/* Middle */}
-          <geometry attach="geometry" vertices={midVertices} faces={midFaces} onUpdate={self => self.computeFaceNormals()}/>
-          <meshStandardMaterial attach="material" color="white"/>
-        </mesh>
-        <mesh> {/* Bottom */}
-          <geometry attach="geometry" vertices={botVertices} faces={botFaces} onUpdate={self => self.computeFaceNormals()}/>
-          <meshStandardMaterial attach="material" color="white"/>
-        </mesh>
-        <mesh
-          position={[0,0,-0.1]}
-        > {/* Gv */}
-          <extrudeBufferGeometry attach="geometry" args={[GvShape, {depth: 0.2, bevelEnabled: false}]} />
-          <meshStandardMaterial attach="material" color='red' />
-        </mesh>
-        <mesh
-        rotation={[Math.PI/2,0,0]}
-        > {/* Gh */}
-          <extrudeBufferGeometry attach="geometry" args={[GhShape,{depth: 0.2, bevelEnabled: false}]} />
-          <meshStandardMaterial attach="material" color='red' />
-        </mesh>
+      onClick={e => { e.stopPropagation(); dispatch(loadData()) }}
+      onPointerOver={e => { e.stopPropagation(); setHover(true) }}
+      onPointerOut={e => { e.stopPropagation(); setHover(false) }}
+    >
+      <mesh> {/* Octahedron */}
+        <geometry attach="geometry" vertices={octVertices} faces={octFaces} onUpdate={self => self.computeFaceNormals()}/>
+        <meshStandardMaterial attach="material" color={hovered ? 'orange' : 'gray'} opacity={0.5} transparent/>
+      </mesh>
+      <mesh> {/* Sphere */}
+        <sphereBufferGeometry args={[0.6, 10, 10]} />
+        <meshStandardMaterial attach="material" color='black' />
+      </mesh>
+      <mesh> {/* Top */}
+        <geometry attach="geometry" vertices={topVertices} faces={topFaces} onUpdate={self => self.computeFaceNormals()}/>
+        <meshStandardMaterial attach="material" color="white"/>
+      </mesh>
+      <mesh> {/* Middle */}
+        <geometry attach="geometry" vertices={midVertices} faces={midFaces} onUpdate={self => self.computeFaceNormals()}/>
+        <meshStandardMaterial attach="material" color="white"/>
+      </mesh>
+      <mesh> {/* Bottom */}
+        <geometry attach="geometry" vertices={botVertices} faces={botFaces} onUpdate={self => self.computeFaceNormals()}/>
+        <meshStandardMaterial attach="material" color="white"/>
+      </mesh>
+      <mesh
+        position={[0,0,-0.1]}
+      > {/* Gv */}
+        <extrudeBufferGeometry attach="geometry" args={[GvShape, {depth: 0.2, bevelEnabled: false}]} />
+        <meshStandardMaterial attach="material" color='red' />
+      </mesh>
+      <mesh
+      rotation={[Math.PI/2,0,0]}
+      > {/* Gh */}
+        <extrudeBufferGeometry attach="geometry" args={[GhShape,{depth: 0.2, bevelEnabled: false}]} />
+        <meshStandardMaterial attach="material" color='red' />
+      </mesh>
     </mesh>
   )
 }

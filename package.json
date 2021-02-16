@@ -1,6 +1,6 @@
 {
   "name": "agt-navi",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "homepage": "https://mhebrard.github.io/nms-browser",
   "dependencies": {
@@ -9,6 +9,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "d3-fetch": "^2.0.0",
+    "d3-force-3d": "^2.2.0",
     "gh-pages": "^3.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -16,7 +17,7 @@
     "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
     "react-three-fiber": "^5.3.4",
-    "three": "^0.121.1"
+    "three": "^0.124.0"
   },
   "scripts": {
     "start": "react-scripts start",
