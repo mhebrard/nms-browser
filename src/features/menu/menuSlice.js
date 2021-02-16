@@ -2,23 +2,23 @@ import { createSelector } from 'reselect';
 import { createSlice } from '@reduxjs/toolkit';
 import { getCatalogue } from '../startup/startupSlice';
 import { CATEGORIES } from '../../data/categories';
-import { MODES, PLATFORMS } from '../../data/platforms';
+import { PLATFORMS } from '../../data/platforms';
 
 export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
     galaxyID: 0,
-    region: '',
+    regionID: '',
     category: CATEGORIES.star,
     platform: PLATFORMS.pc,
-    mode: MODES.normal
+    node: ''
   },
   reducers: {
     setGalaxyID: (state, action) => {
       state.galaxyID = action.payload
     },
-    setRegion: (state, action) => {
-      state.region = action.payload
+    setRegionID: (state, action) => {
+      state.regionID = action.payload
     },
     setCategory: (state, action) => {
       state.category = action.payload;
@@ -26,21 +26,21 @@ export const menuSlice = createSlice({
     setPlatform: (state, action) => {
       state.platform = action.payload;
     },
-    setMode: (state, action) => {
-      state.mode = action.payload;
-    },
+    setNode: (state, action) => {
+      state.node = action.payload;
+    }
   }
 });
 
 // Actions
-export const { setGalaxyID, setRegion, setCategory, setPlatform, setMode } = menuSlice.actions;
+export const { setGalaxyID, setRegionID, setCategory, setPlatform, setNode} = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;
-export const getRegion = state => state.menu.region;
+export const getRegionID = state => state.menu.regionID;
 export const getCategory = state => state.menu.category;
 export const getPlatform = state => state.menu.platform;
-export const getMode = state => state.menu.mode;
+export const getNode = state => state.menu.node;
 
 // Memoized Selectors
 export const getGalaxyList = createSelector(
@@ -63,9 +63,10 @@ export const getGalaxySpecificRegionList = createSelector(
       return Object.keys(regions).map(k => {
         return {
           name: regions[k].regionName,
+          id: k,
           systemCount: regions[k].systems.filter(s => s !== undefined).length
         }
-      })
+      }).sort((a, b) => a.name.localeCompare(b.name))
     } else {
       return []
     }
