@@ -11,16 +11,20 @@ import { Region } from '../region/Region'
 import { Tooltip } from '../tooltip/Tooltip'
 import { AGT } from '../three/AGT'
 
-function LoadButton() {
-  // const dispatch = useDispatch()
-  const status = useSelector(getStatus)
-  if (status === "NoData") {
-    return (
-      <button className={styles.button} type='button'>
-        Click on the octahedron to initiate the map
-      </button>
-    )
-  } else { return null}
+function Loadmsg() {
+  return (
+    <button className={styles.button} type='button'>
+      Click on the octahedron to initiate the map
+    </button>
+  )
+}
+
+function Menumsg() {
+  return (
+    <button className={styles.button} type='button'>
+      Click on the left menu to navigate through galaxies
+    </button>
+  )
 }
 
 export function Startup() {
@@ -42,7 +46,8 @@ export function Startup() {
       }
       {/* Overlay HTML */}
       <div className={styles.status}>{status}</div>
-      {status === "NoData" ? <LoadButton/> : null}
+      {status === "NoData" ? <Loadmsg/> : null}
+      {status === "Full" ? <Menumsg/> : null}
       {status === "Full" || status === "Galaxy" || status === "Region" ? <Menu/> : null}
       {status === "Galaxy" || status === "Region" ? <Tooltip /> : null}
       {status === "Galaxy" ? <Galaxy/> : null}

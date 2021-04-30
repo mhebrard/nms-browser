@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getGalaxyID, getGalaxyList, getRegionID, getPlatform, getGalaxySpecificRegionList, setPlatform} from './menuSlice';
+import { getGalaxyID, getGalaxyList, getRegionID, getGalaxySpecificRegionList, isCollapse, toggle} from './menuSlice';
 import { changeGalaxy, changeRegion } from '../../chains';
 import styles from './Menu.module.css';
-import { PLATFORMS } from '../../data/platforms';
 
 export function Menu() {
   const dispatch = useDispatch()
@@ -11,11 +10,19 @@ export function Menu() {
   const galaxyList = useSelector(getGalaxyList)
   const regionID = useSelector(getRegionID)
   const regionList = useSelector(getGalaxySpecificRegionList)
-  const platform = useSelector(getPlatform)
+  const collapsed = useSelector(isCollapse)
 
   return (
-    <div className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}>
-      <div><img/>AGT NAVI:</div>
+    <div
+      className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
+      style={{maxWidth: collapsed ? '30px' : '99vw'}}
+      >
+      <div>
+        <img
+          onClick={e => dispatch(toggle())}
+        />
+        AGTNAVI:
+      </div>
       <div>
         <img/>
         Galaxy: 
@@ -41,18 +48,6 @@ export function Menu() {
           <option value=''>--Select--</option>
           {regionList.map(r => {
             return <option key={r.id} value={r.id}>{r.name} ({r.systemCount})</option>
-          })}
-        </select>
-      </div>
-      <div>
-        <img/>Platform:
-        <select
-          name='platform'
-          value={platform}
-          onChange={e => dispatch(setPlatform(e.target.value))}
-        >
-          {Object.keys(PLATFORMS).map(k => {
-            return <option key={k} value={PLATFORMS[k]}>{PLATFORMS[k]}</option>
           })}
         </select>
       </div>
