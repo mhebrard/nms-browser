@@ -5,9 +5,9 @@ import * as THREE from '../../three-bundle'
 import * as d3 from '../../d3-bundle'
 import { COLORS } from '../../data/categories'
 import { getNeighbourRegionDistancesList, getNeighbourRegionSystemList, setSystems } from './regionSlice';
-import { getCategory, getPlatform, getRegionID, setNode } from '../menu/menuSlice';
+import { collapseMenu, getCategory, getRegionID } from '../menu/menuSlice';
 import { circle } from '../../data/assets';
-import { setVisibility } from '../tooltip/tooltipSlices'
+import { collapseTooltip, setNode } from '../tooltip/tooltipSlices'
 
 export function Region() {
   const dispatch = useDispatch()
@@ -23,7 +23,6 @@ export function Region() {
   // console.log('distances', distances)
   const regionID = useSelector(getRegionID)
   const category = useSelector(getCategory)
-  const platform = useSelector(getPlatform)
   const scale = 10
   
   
@@ -60,8 +59,8 @@ export function Region() {
     // const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
     // console.log(n)
     // dispatch(setPosition({x: pos.x, y: pos.y}))
-    dispatch(setNode(systems.filter(d => d.ssi === n.ssi)[0]))
-    dispatch(setVisibility(true))
+    dispatch(setNode(systems.filter(d => d.glyphs === n.glyphs)[0]))
+    // dispatch(setVisibility(true))
   }
 
   // Move toward node
@@ -95,9 +94,9 @@ export function Region() {
       // Force distance
       ref.current.d3Force('link').distance(n => n.distance);
       // Force region
-      ref.current.d3Force('x', d3.forceX(n => n.cx*1000).strength(0.01));
-      ref.current.d3Force('y', d3.forceY(n => n.cy*1000).strength(0.01));
-      ref.current.d3Force('z', d3.forceZ(n => n.cz*1000).strength(0.01));
+      ref.current.d3Force('x', d3.forceX(n => n.cx*1000).strength(0.05));
+      ref.current.d3Force('y', d3.forceY(n => n.cy*1000).strength(0.05));
+      ref.current.d3Force('z', d3.forceZ(n => n.cz*1000).strength(0.05));
 
     }, [])
 
@@ -110,11 +109,15 @@ export function Region() {
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
       linkVisibility={true}
-      nodeLabel={n => n[platform].name || n.name || '[unknown]' }
+      nodeLabel={n => n.name || n.originalName || '[unknown]' }
       // onNodeHover={n => onHoverHandler(n, ref)}
       onNodeClick={n => onClickHandler(n, ref)}
       onNodeRightClick={n => onRightClickHandler(n, ref)}
-      onBackgroundClick={() => { console.log('onBackgroundClick'); dispatch(setVisibility(false))} }
+      onBackgroundClick={() => {
+        console.log('onBackgroundClick');
+        dispatch(collapseMenu());
+        dispatch(collapseTooltip());
+      } }
     />
   }
 

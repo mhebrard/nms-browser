@@ -15,6 +15,7 @@
 .sidenav div {
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 .tronbox {
   border-radius: 3px;
@@ -23,6 +24,7 @@
 }
 .content {
   color: white;
+  background-color: rgba(0,0,0,0.7);
 }
 img {
   height: 24px;

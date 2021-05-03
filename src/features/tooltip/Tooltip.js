@@ -1,7 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getNode } from '../menu/menuSlice';
-import { isVisible, getPosition} from './tooltipSlices';
+import { useSelector, useDispatch } from 'react-redux';
+import { isCollapse, getPosition, getNode, toggle} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 import img_default from '../../img/SYSTEM.png'
@@ -21,19 +20,26 @@ import img_rank0 from '../../img/RANK.0.png';
 import img_rank1 from '../../img/RANK.1.png';
 import img_rank2 from '../../img/RANK.2.png';
 import img_rank3 from '../../img/RANK.3.png';
-import { getPlatform } from '../menu/menuSlice';
 
 function Info() {
+  const dispatch = useDispatch()
   const node = useSelector(getNode)
+  const collapsed = useSelector(isCollapse)
+
   return (
-    <div className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}>
+    <div
+      className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
+      style={{
+        maxWidth: collapsed ? '30px' : '99vw',
+        transition: 'max-width .5s'
+      }}
+      onClick={e => dispatch(toggle())}
+      >
       <div><img/>Status:</div>
       <div><img/>Galaxy: {node.galaxyName}</div>
       <div><img/>Region: {node.regionName}</div>
-      <div><img/>Original: {node.name || 'unknown'} </div>
-      <div><img/>PC: {node['PC'].name || node.name || '[unknown]'}</div>
-      <div><img/>PS4: {node['PS4'].name || node.name || '[unknown]'}</div>
-      <div><img/>Xbox: {node['XBOX'].name || node.name || '[unknown]'}</div>
+      <div><img/>Original: {node.originalName || '[unknown]'} </div>
+      <div><img/>System: {node.name || '[unknown]'}</div>
       <div><img/>Coords: {node.coordinates}</div>
       <div><img/>Glyphs: {node.glyphs}</div>
       <div><img/>LY: {node.regionLY} - Water: {node.water}</div>
@@ -55,10 +61,7 @@ function Info() {
 }
 
 export function Tooltip() {
-  const visible = useSelector(isVisible)
   const node = useSelector(getNode)
-  const pos = useSelector(getPosition)
-  const platform = useSelector(getPlatform)
 
   let img_race = img_default
   let img_eco = img_default
@@ -149,9 +152,5 @@ export function Tooltip() {
     }
   }
 
-  const styleDyn = {
-    opacity: visible ? 1 : 0,
-  };
-
-  return node ? (<Info/>) : (null)
+  return (<Info/>)
 }

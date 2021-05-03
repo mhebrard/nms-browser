@@ -2,7 +2,6 @@ import { createSelector } from 'reselect';
 import { createSlice } from '@reduxjs/toolkit';
 import { getCatalogue } from '../startup/startupSlice';
 import { CATEGORIES } from '../../data/categories';
-import { PLATFORMS } from '../../data/platforms';
 
 export const menuSlice = createSlice({
   name: 'menu',
@@ -10,8 +9,7 @@ export const menuSlice = createSlice({
     galaxyID: 0,
     regionID: '',
     category: CATEGORIES.star,
-    platform: PLATFORMS.pc,
-    node: ''
+    collapse: true
   },
   reducers: {
     setGalaxyID: (state, action) => {
@@ -23,24 +21,23 @@ export const menuSlice = createSlice({
     setCategory: (state, action) => {
       state.category = action.payload;
     },
-    setPlatform: (state, action) => {
-      state.platform = action.payload;
+    toggle: (state, action) => {
+      state.collapse = !state.collapse;
     },
-    setNode: (state, action) => {
-      state.node = action.payload;
+    collapseMenu: (state, action) => {
+      state.collapse = true
     }
   }
 });
 
 // Actions
-export const { setGalaxyID, setRegionID, setCategory, setPlatform, setNode} = menuSlice.actions;
+export const { setGalaxyID, setRegionID, setCategory, toggle, collapseMenu} = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;
 export const getRegionID = state => state.menu.regionID;
 export const getCategory = state => state.menu.category;
-export const getPlatform = state => state.menu.platform;
-export const getNode = state => state.menu.node;
+export const isCollapse = state => state.menu.collapse;
 
 // Memoized Selectors
 export const getGalaxyList = createSelector(
