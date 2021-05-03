@@ -23,7 +23,7 @@ export function Menu() {
       >
       <div>
         <img/>
-        AGT NAVI:
+        AGT NAVI v0.5.0:
       </div>
       <div>
         <img/>
