@@ -23,12 +23,15 @@ export const menuSlice = createSlice({
     },
     toggle: (state, action) => {
       state.collapse = !state.collapse;
+    },
+    collapseMenu: (state, action) => {
+      state.collapse = true
     }
   }
 });
 
 // Actions
-export const { setGalaxyID, setRegionID, setCategory, toggle} = menuSlice.actions;
+export const { setGalaxyID, setRegionID, setCategory, toggle, collapseMenu} = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;

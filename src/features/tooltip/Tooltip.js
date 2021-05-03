@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { isVisible, getPosition, getNode} from './tooltipSlices';
+import { useSelector, useDispatch } from 'react-redux';
+import { isCollapse, getPosition, getNode, toggle} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 import img_default from '../../img/SYSTEM.png'
@@ -22,9 +22,19 @@ import img_rank2 from '../../img/RANK.2.png';
 import img_rank3 from '../../img/RANK.3.png';
 
 function Info() {
+  const dispatch = useDispatch()
   const node = useSelector(getNode)
+  const collapsed = useSelector(isCollapse)
+
   return (
-    <div className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}>
+    <div
+      className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
+      style={{
+        maxWidth: collapsed ? '30px' : '99vw',
+        transition: 'max-width .5s'
+      }}
+      onClick={e => dispatch(toggle())}
+      >
       <div><img/>Status:</div>
       <div><img/>Galaxy: {node.galaxyName}</div>
       <div><img/>Region: {node.regionName}</div>
@@ -51,9 +61,7 @@ function Info() {
 }
 
 export function Tooltip() {
-  const visible = useSelector(isVisible)
   const node = useSelector(getNode)
-  const pos = useSelector(getPosition)
 
   let img_race = img_default
   let img_eco = img_default
@@ -144,9 +152,5 @@ export function Tooltip() {
     }
   }
 
-  const styleDyn = {
-    opacity: visible ? 1 : 0,
-  };
-
-  return node ? (<Info/>) : (null)
+  return (<Info/>)
 }

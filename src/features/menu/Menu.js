@@ -15,13 +15,15 @@ export function Menu() {
   return (
     <div
       className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
-      style={{maxWidth: collapsed ? '30px' : '99vw'}}
+      style={{
+        maxWidth: collapsed ? '30px' : '99vw',
+        transition: 'max-width .5s'
+      }}
+      onClick={e => dispatch(toggle())}
       >
       <div>
-        <img
-          onClick={e => dispatch(toggle())}
-        />
-        AGTNAVI:
+        <img/>
+        AGT NAVI:
       </div>
       <div>
         <img/>
