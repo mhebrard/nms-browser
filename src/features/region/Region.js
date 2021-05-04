@@ -24,7 +24,7 @@ export function Region() {
   const regionID = useSelector(getRegionID)
   const category = useSelector(getCategory)
   const scale = 10
-  
+  const distance = 120;
   
   // Create Object
   function objectHandler(n) {
@@ -55,22 +55,17 @@ export function Region() {
 
   // Display tooltip
   function onClickHandler(n, ref) {
+    // console.log('click on', n)
     // console.log('onClickHandler',n['PC']['Normal'].name, '-', n.region, '<>',region, '-', n.region === region ? COLORS[n[category]] || 'uncharted' : 'outRegion',)
-    // const pos = ref.current.graph2ScreenCoords(n.x, n.y, n.z)
-    // console.log(n)
-    // dispatch(setPosition({x: pos.x, y: pos.y}))
+    // console.log('camera', ref.current.cameraPosition())
     dispatch(setNode(systems.filter(d => d.glyphs === n.glyphs)[0]))
-    // dispatch(setVisibility(true))
   }
 
   // Move toward node
   function onRightClickHandler(n, ref) {
     // console.log('onRightClickHandler')
-    // Hide tooltip
-    // dispatch(setVisibility(false))
 
     // Aim at node from outside it
-    const distance = 120;
     const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
   
     ref.current.cameraPosition(
@@ -98,6 +93,13 @@ export function Region() {
       ref.current.d3Force('y', d3.forceY(n => n.cy*1000).strength(0.05));
       ref.current.d3Force('z', d3.forceZ(n => n.cz*1000).strength(0.05));
 
+      // Init camera position
+      ref.current.cameraPosition(
+        { x: 0, y: 0, z: distance*scale }, // new position
+        { x:0, y:0, z:0}, // lookAt ({ x, y, z })
+        3000  // ms transition duration
+      );
+      
     }, [])
 
     return <ForceGraph3D
@@ -114,7 +116,6 @@ export function Region() {
       onNodeClick={n => onClickHandler(n, ref)}
       onNodeRightClick={n => onRightClickHandler(n, ref)}
       onBackgroundClick={() => {
-        console.log('onBackgroundClick');
         dispatch(collapseMenu());
         dispatch(collapseTooltip());
       } }
