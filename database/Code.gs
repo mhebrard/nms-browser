@@ -78,15 +78,28 @@ function updateRegion(e) {
       name: sheet.getRange(row, head["Galaxy"]).getValue(),
     };
     const region = {
-      id: sheet.getRange(row, head["Glylphs"]).getValue(),
-      regionName: sheet.getRange(row, head["Region Name"]).getValue(),
+      // id: sheet.getRange(row, head["Glylphs"]).getValue(),
+      name: sheet.getRange(row, head["Region Name"]).getValue(),
+      civ: sheet.getRange(row, head["Civilized"]).getValue(),
       coords: sheet.getRange(row, head["Coordinates"]).getValue(),
       quadrant: sheet.getRange(row, head["Quadrant"]).getValue(),
       docSeq: sheet.getRange(row, head["Doc Sequence"]).getValue(),
+      release: sheet.getRange(row, head["Game Release"]).getValue(),
+      // discoveredBy: sheet.getRange(row, head["Earliest Known Surveyor ID"]).getValue(), // Deduced from systems
+      // surveyedBy: sheet.getRange(row, head["Latest Surveyor ID"]).getValue(), // Deduced from systems
+      summaryNotes: sheet.getRange(row, head["Summary Notes"]).getValue(),
+      locationNotes: sheet.getRange(row, head["Location Notes"]).getValue(),
+      additionalNotes: sheet.getRange(row, head["Additional Notes"]).getValue(),
+      civNotes: sheet.getRange(row, head["Civilized Space Notes"]).getValue(),
       lock: sheet.getRange(row, head["Lock Record"]).getValue(),
       age: sheet.getRange(row, head["Region Age (billions of years)"]).getValue(),
-      wiki: sheet.getRange(row, head["NMS Wiki link"]).getValue(),
+      // firstPhantom: sheet.getRange(row, head["Lowest Known Phantom System (3 digit hex)"]).getValue(), // Deduced from system
+      wikiLink: sheet.getRange(row, head["NMS Wiki link"]).getValue(),
+      externalLink: sheet.getRange(row, head["External Link 1"]).getValue(),
+      videoLink: sheet.getRange(row, head["Video Link 1"]).getValue(),
       lightYears: Math.round(sheet.getRange(row, head["Light Years Estimate"]).getValue()),
+      legacyName: sheet.getRange(row, head["Pre-Atlas Rises Legacy Name"]).getValue(),
+      legacyWiki: sheet.getRange(row, head["Pre-Atlas Rises Legacy wiki link"]).getValue(),
       x: sheet.getRange(row, head["XX (dec)"]).getValue(),
       y: sheet.getRange(row, head["YY (dec)"]).getValue(),
       z: sheet.getRange(row, head["ZZ (dec)"]).getValue(),
@@ -95,7 +108,14 @@ function updateRegion(e) {
 
     // Check if row is valid
     var valid = false;
-    if (region.lock == 'Y' && region.id.length > 0) { valid=true; }
+    if (region.lock == 'Y') { valid=true; }
+
+    // Define region id
+    if (region.glyphs.length > 0) {
+      region.id = region.glyphs.slice(4);
+    } else {
+      region.id = region.name.replace(/\s/g, '');
+    }
 
     // Update Galaxy
     if (valid == true) {
@@ -112,73 +132,11 @@ function updateRegion(e) {
 } // end updateRegion
 
 function manual() {
-  // // TEST UPDATE DOCS
-  // // Get data
-  // const sheet = "Region DB";
-  // const galaxyName = "My Galaxy";
-  // const lock = "Y";
-  // const galaxyID = "999";
-
-  // const regionName = "My Favorite Region";
-  // const quadrant = "Gamma";
-  // const wiki = "...";
-  // const ly = "600000";
-  // const coords = "1234:5678:9012";
-  // const x = "10";
-  // const y = "20";
-  // const z = "30";
-  // const glyphs = "0000ABCDEFGH";
-
-  // Check if row is valid
-  // var valid = false;
-  // if (lock == 'Y' && glyphs.length > 0) { valid=true; }
-
-  // Update Galaxy
-  // if (valid == true) {
-  //   db = Firestore();
-  //   // Galaxy
-  //   db.updateDocument('Galaxies/'+galaxyID, {
-  //     "ID": galaxyID, 
-  //     "name": galaxyName
-  //   }, true);
-  //   console.log('updateDocument: Galaxies/'+galaxyID+'{"ID": '+galaxyID+',"name": '+galaxyName+'}');
-  //   db.updateDocument('Galaxies/'+galaxyID+'/Regions/'+glyphs, {
-  //     "ID": glyphs, 
-  //     "name": regionName,
-  //     "coordinates": coords,
-  //     "quadrant": quadrant,
-  //     "wikiLink": wiki,
-  //     "lightYears": ly,
-  //     "x": x,
-  //     "y": y,
-  //     "z": z,
-  //     "glyphs": glyphs
-  //   }, true);
-  //   console.log('updateDocument: Galaxies/'+galaxyID+'/Regions/'+glyphs);
-  //   // Create a proper collection and document
-
-  //   // db.updateDocument('Galaxies/'+galaxyID+'/Regions/'+glyphs, {
-  //   //   "ID": glyphs, 
-  //   //   "name": regionName,
-  //   //   "coordinates": coords,
-  //   //   "quadrant": quadrant,
-  //   //   "wikiLink": wiki,
-  //   //   "lightYears": ly,
-  //   //   "x": x,
-  //   //   "y": y,
-  //   //   "z": z,
-  //   //   "glyphs": glyphs
-  //   // }, true);
-  //   // console.log('Galaxies/'+galaxyID+'{"ID": '+galaxyID+',"name": '+galaxyName+'}');
-  // } else {
-  //   console.log('invalid');
-  // }
-
   // // TEST QUERIES
   // db = Firestore();
   // const qs = db.query("Galaxies/1/Regions").Where("quadrant", "==", "Beta").Execute();
   // console.log(qs.length);
-  // // console.log(qs[0].name)
+  // console.log(qs[0].name)
   // console.log(qs[0].fields.name)
   // console.log(qs[0].fields.quadrant)
 }
