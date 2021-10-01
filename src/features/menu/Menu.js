@@ -25,7 +25,7 @@ export function Menu() {
       >
       <div onClick={e => dispatch(toggle())}>
       <img src={img_logo} alt='logo' />
-        AGT NAVI v0.5.0:
+        AGT NAVI v0.6.0:
       </div>
       <div>
         <img src={img_galaxy} alt='galaxy' />
