@@ -3,72 +3,69 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isCollapse, getPosition, getNode, toggle} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
+// import img_logo from '../../img/logo/png';
+import img_galaxy from '../../img/GALAXYMAP.png';
+import img_glyph_0 from '../../img/PORTALSYMBOL.0.png';
+import img_glyph_5 from '../../img/PORTALSYMBOL.5.png';
+import img_glyph_A from '../../img/PORTALSYMBOL.A.png';
+
+import img_yellow from '../../img/star_yellow.png';
+import img_red from '../../img/star_red.png';
+import img_green from '../../img/star_green.png';
+import img_blue from '../../img/star_blue.png';
+
 import img_default from '../../img/SYSTEM.png'
 import img_cross from '../../img/SYSTEM.CROSS.png';
-import img_gek from '../../img/SYSTEM.RACEGEK.png';
-import img_korvax from '../../img/SYSTEM.RACEKORVAX.png';
-import img_vykeen from '../../img/SYSTEM.RACEVYKEEN.png';
-import img_materials from '../../img/SYSTEM.ECOFUSION.png';
-import img_technology from '../../img/SYSTEM.ECOHIGHTECH.png';
-import img_manufacturing from '../../img/SYSTEM.ECOMANUFACTURING.png';
-import img_mining from '../../img/SYSTEM.ECOMINING.png'
-import img_power from '../../img/SYSTEM.ECOPOWERGEN.png';
-import img_scientific from '../../img/SYSTEM.ECOSCIENTIFIC.png';
-import img_trading from '../../img/SYSTEM.ECOTRADING.png';
+import img_gek from '../../img/RACE.GEK.png';
+import img_korvax from '../../img/RACE.KORVAX.png';
+import img_vykeen from '../../img/RACE.VYKEEN.png';
+import img_materials from '../../img/ECONOMY.FUSION.png';
+import img_technology from '../../img/ECONOMY.HIGHTECH.png';
+import img_manufacturing from '../../img/ECONOMY.MANUFACTURING.png';
+import img_mining from '../../img/ECONOMY.MINING.png'
+import img_power from '../../img/ECONOMY.POWERGENERATION.png';
+import img_scientific from '../../img/ECONOMY.SCIENTIFIC.png';
+import img_trading from '../../img/ECONOMY.TRADING.png';
 import img_conflict from '../../img/SYSTEM.CONFLICT.png';
+import img_conflict_1 from '../../img/CONFLICT.LOW.png';
+import img_conflict_2 from '../../img/CONFLICT.MEDIUM.png';
+import img_conflict_3 from '../../img/CONFLICT.HIGH.png';
 import img_rank0 from '../../img/RANK.0.png';
 import img_rank1 from '../../img/RANK.1.png';
 import img_rank2 from '../../img/RANK.2.png';
 import img_rank3 from '../../img/RANK.3.png';
 
-function Info() {
+export function Tooltip() {
   const dispatch = useDispatch()
   const node = useSelector(getNode)
   const collapsed = useSelector(isCollapse)
 
-  return (
-    <div
-      className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
-      style={{
-        maxWidth: collapsed ? '30px' : '99vw',
-        transition: 'max-width .5s'
-      }}
-      onClick={e => dispatch(toggle())}
-      >
-      <div><img/>Status:</div>
-      <div><img/>Galaxy: {node.galaxyName}</div>
-      <div><img/>Region: {node.regionName}</div>
-      <div><img/>Original: {node.originalName || '[unknown]'} </div>
-      <div><img/>System: {node.name || '[unknown]'}</div>
-      <div><img/>Coords: {node.coordinates}</div>
-      <div><img/>Glyphs: {node.glyphs}</div>
-      <div><img/>LY: {node.regionLY} - Water: {node.water}</div>
-      <div><img/>Stars: {node.starCount} - {node.starClass} ({node.starColor})</div>
-      <div><img/>{node.planetCount} Planet - {node.moonCount} Moon</div>
-      <div><img/>Faction: {node.faction}</div>
-      <div><img/>Economy: {node.economy}</div>
-      <div><img/>Wealth: {node.wealth} ({node.wealthLevel})</div>
-      <div><img/>Buy: {node.buy}% - Sell: {node.sell}%</div>
-      <div><img/>Confict: {node.conflict} ({node.conflictLevel})</div>
-      <div><img/>Discovered by {node.discoveredBy || '?'}</div>
-      <div><img/>Discovered on {node.discoveryDate || '?'}</div>
-      <div><img/>Surveyed by {node.surveyedBy}</div>
-      <div><img/>Surveyed on {node.surveyDate}</div>
-      <div><img/>Release: {node.release}</div>
-      <div><img/>Civ: {node.civilized}</div>
-    </div>
-  )
-}
-
-export function Tooltip() {
-  const node = useSelector(getNode)
-
+  let img_color = img_yellow
   let img_race = img_default
   let img_eco = img_default
   let img_war = img_rank0
   let img_wealth = img_rank0
 
   if (node) {
+    // Define star
+    switch (node.starColor) {
+      case 'Yellow':
+        img_color = img_yellow
+        break;
+      case 'Red':
+        img_color = img_red
+        break;
+      case 'Green':
+        img_color = img_green
+        break;
+      case 'Blue':
+        img_color = img_blue
+        break;
+      default:
+        img_color = img_yellow
+        break;
+    }
+
     // Define race
     switch (node.faction) {
       case 'Korvax':
@@ -123,16 +120,16 @@ export function Tooltip() {
     // Define conflict tier
     switch (node.conflictLevel) {
       case '1':
-        img_war = img_rank1
+        img_war = img_conflict_1
         break;
       case '2':
-        img_war = img_rank2
+        img_war = img_conflict_2
         break;
       case '3':
-        img_war = img_rank3
+        img_war = img_conflict_3
         break;
       default:
-        img_war = img_rank0
+        img_war = img_conflict
         break;
     }
     // Define wealth tier
@@ -152,5 +149,35 @@ export function Tooltip() {
     }
   }
 
-  return (<Info/>)
+  return (
+    <div
+      className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
+      style={{
+        maxWidth: collapsed ? '30px' : '99vw',
+        transition: 'max-width .5s'
+      }}
+      onClick={e => dispatch(toggle())}
+      >
+      <div><img src={img_galaxy} alt="galaxy"/>Galaxy: {node.galaxyName}</div>
+      <div><img/>Region: {node.regionName}</div>
+      <div><img/>Original: {node.originalName || '[unknown]'} </div>
+      <div><img/>System: {node.name || '[unknown]'}</div>
+      <div><img src={img_glyph_A} alt="coords" />Coords: {node.coordinates}</div>
+      <div><img src={img_glyph_0} alt="glyphs" />Glyphs: {node.glyphs}</div>
+      <div><img src={img_glyph_5} alt="light year" />LY: {node.regionLY} - Water: {node.water}</div>
+      <div><img src={img_color} alt="star color" />Stars: {node.starCount} - {node.starClass} ({node.starColor})</div>
+      <div><img/>{node.planetCount} Planet - {node.moonCount} Moon</div>
+      <div><img src={img_race}  alt="race" />Faction: {node.faction}</div>
+      <div><img src={img_eco}  alt="economy" />Economy: {node.economy}</div>
+      <div><img/>Wealth: {node.wealth} ({node.wealthLevel})</div>
+      <div><img/>Buy: {node.buy}% - Sell: {node.sell}%</div>
+      <div><img src={img_war} alt="conflict" />Confict: {node.conflict} ({node.conflictLevel})</div>
+      <div><img/>Discovered by {node.discoveredBy || '?'}</div>
+      <div><img/>Discovered on {node.discoveryDate || '?'}</div>
+      <div><img/>Surveyed by {node.surveyedBy}</div>
+      <div><img/>Surveyed on {node.surveyDate}</div>
+      <div><img/>Release: {node.release}</div>
+      <div><img/>Civ: {node.civilized}</div>
+    </div>
+  )
 }

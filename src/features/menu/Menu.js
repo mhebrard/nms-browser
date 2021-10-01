@@ -4,6 +4,9 @@ import { getGalaxyID, getGalaxyList, getRegionID, getGalaxySpecificRegionList, i
 import { changeGalaxy, changeRegion } from '../../chains';
 import styles from './Menu.module.css';
 
+import img_logo from '../../img/logo.png';
+import img_galaxy from '../../img/GALAXYMAP.png';
+
 export function Menu() {
   const dispatch = useDispatch()
   const galaxyID = useSelector(getGalaxyID)
@@ -19,14 +22,13 @@ export function Menu() {
         maxWidth: collapsed ? '30px' : '99vw',
         transition: 'max-width .5s'
       }}
-      onClick={e => dispatch(toggle())}
       >
-      <div>
-        <img/>
-        AGT NAVI v0.5.0:
+      <div onClick={e => dispatch(toggle())}>
+      <img src={img_logo} alt='logo' />
+        AGT NAVI v0.6.0:
       </div>
       <div>
-        <img/>
+        <img src={img_galaxy} alt='galaxy' />
         Galaxy: 
         <select
           name='galaxy'

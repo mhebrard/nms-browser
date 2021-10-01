@@ -88,10 +88,10 @@ function loadCatalogue(url) {
           if (r[keyMap['e-buy']] !== '') { system.buy = r[keyMap['e-buy']] }
           if (r[keyMap['E-Sell']] !== '') { system.sell = r[keyMap['E-Sell']] }
           if (r[keyMap['Conflict']] !== '') { system.conflict = r[keyMap['Conflict']] }
-          if (r[keyMap['X coord DEC']] !== '') { region.cx = r[keyMap['X coord DEC']] }
-          if (r[keyMap['Y coord DEC']] !== '') { region.cy = r[keyMap['Y coord DEC']] }
-          if (r[keyMap['Z coord DEC']] !== '') { region.cz = r[keyMap['Z coord DEC']] }
-          if (r[keyMap['System ID']] !== '') { system.ssi = r[keyMap['System ID']] }
+          if (r[keyMap['X coord DEC']] !== '') { region.cx = parseInt(r[keyMap['X coord DEC']]) }
+          if (r[keyMap['Y coord DEC']] !== '') { region.cy = parseInt(r[keyMap['Y coord DEC']]) }
+          if (r[keyMap['Z coord DEC']] !== '') { region.cz = parseInt(r[keyMap['Z coord DEC']]) }
+          if (r[keyMap['System ID']] !== '') { system.ssi = parseInt(r[keyMap['System ID']]) }
           if (r[keyMap['Lock Record?']] !== '') { system.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '') { system.phantom = r[keyMap['Phantom System?']] }
           if (r[keyMap['NMS wiki Link']] !== '') { system.wiki = r[keyMap['NMS wiki Link']] }
@@ -132,10 +132,10 @@ function loadCatalogue(url) {
           if (r[keyMap['e-buy']] !== '' && system.buy === undefined) { system.buy = r[keyMap['e-buy']] }
           if (r[keyMap['E-Sell']] !== '' && system.sell === undefined ) { system.sell = r[keyMap['E-Sell']] }
           if (r[keyMap['Conflict']] !== '' && system.conflict === undefined) { system.conflict = r[keyMap['Conflict']] }
-          if (r[keyMap['X coord DEC']] !== '' && region.cx === undefined) { region.cx = r[keyMap['X coord DEC']] }
-          if (r[keyMap['Y coord DEC']] !== '' && region.cy === undefined) { region.cy = r[keyMap['Y coord DEC']] }
-          if (r[keyMap['Z coord DEC']] !== '' && region.cz === undefined) { region.cz = r[keyMap['Z coord DEC']] }
-          if (r[keyMap['System ID']] !== '' && system.ssi === undefined) { system.ssi = r[keyMap['System ID']] }
+          if (r[keyMap['X coord DEC']] !== '' && region.cx === undefined) { region.cx = parseInt(r[keyMap['X coord DEC']]) }
+          if (r[keyMap['Y coord DEC']] !== '' && region.cy === undefined) { region.cy = parseInt(r[keyMap['Y coord DEC']]) }
+          if (r[keyMap['Z coord DEC']] !== '' && region.cz === undefined) { region.cz = parseInt(r[keyMap['Z coord DEC']]) }
+          if (r[keyMap['System ID']] !== '' && system.ssi === undefined) { system.ssi = parseInt(r[keyMap['System ID']]) }
           if (r[keyMap['Lock Record?']] !== '' && system.locked === undefined) { system.locked = r[keyMap['Lock Record?']] }
           if (r[keyMap['Phantom System?']] !== '' && system.phantom === undefined) { system.phantom = r[keyMap['Phantom System?']] }
           if (r[keyMap['NMS wiki Link']] !== '' && system.wiki === undefined) { system.wiki = r[keyMap['NMS wiki Link']] }

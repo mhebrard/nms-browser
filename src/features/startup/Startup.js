@@ -13,17 +13,25 @@ import { AGT } from '../three/AGT'
 
 function Loadmsg() {
   return (
-    <button className={styles.button} type='button'>
+    <div className={styles.msg}>
       Click on the octahedron to initiate the map
-    </button>
+    </div>
+  )
+}
+
+function Waitmsg() {
+  return (
+    <div className={styles.msg}>
+      Please wait, data are loading in the background
+    </div>
   )
 }
 
 function Menumsg() {
   return (
-    <button className={styles.button} type='button'>
+    <div className={styles.msg}>
       Click on the left menu to navigate through galaxies
-    </button>
+    </div>
   )
 }
 
@@ -32,7 +40,7 @@ export function Startup() {
   const dispatch = useDispatch()
 
   return (
-    <div style={{ width: '100%', height: '100%' }} >
+    <div className={styles.container} >
       { status === "Region" 
          ? <Region/> 
          : <Canvas style={{ background: '#000000' }}>
@@ -47,6 +55,7 @@ export function Startup() {
       {/* Overlay HTML */}
       <div className={styles.status}>{status}</div>
       {status === "NoData" ? <Loadmsg/> : null}
+      {status === "Loading" ? <Waitmsg/> : null}
       {status === "Full" ? <Menumsg/> : null}
       {status === "Full" || status === "Galaxy" || status === "Region" ? <Menu/> : null}
       {status === "Galaxy" || status === "Region" ? <Tooltip /> : null}
