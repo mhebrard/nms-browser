@@ -4,15 +4,15 @@ import { getGalaxyID, getRegionID } from '../menu/menuSlice';
 import { getCatalogue, getDistances } from '../startup/startupSlice';
 
 export const regionSlice = createSlice({
- name: 'region',
- initialState: {
-   systems: []
- },
- reducers: {
-   setSystems: (state, action) => {
-     state.systems = action.payload
-   }
- }
+  name: 'region',
+  initialState: {
+    systems: []
+  },
+  reducers: {
+    setSystems: (state, action) => {
+      state.systems = action.payload
+    }
+  }
 })
 
 // Actions
@@ -37,7 +37,7 @@ export const getNeighbourRegionSystemList = createSelector(
       && (oriZ - 2 < regionList[k].cz) && (regionList[k].cz < oriZ + 2)
     ))
     // List all systems in neighbour regions
-    return Object.keys(regionList).reduce((res, r) => {
+    return neighbourList.reduce((res, r) => {
       // Get current region in the loop
       const current = regionList[r]
       // Get coordinate of current region
@@ -45,23 +45,21 @@ export const getNeighbourRegionSystemList = createSelector(
       const centerY = current.cy;
       const centerZ = current.cz;
       // Extract Systems and set region center
-      if (neighbourList.includes(r)) {
-        res = res.concat(
-          current.systems.filter(s => s !== undefined).map(s => {
-            const rid = s.glyphs.slice(4)
-            return {...s, 
-              cx: centerX - oriX, 
-              cy: centerY - oriY, 
-              cz: centerZ - oriZ,
-              regionID: rid,
-              regionName: catalogue[galaxyID].regions[rid].regionName,
-              regionLY: catalogue[galaxyID].regions[rid].ly,
-              galaxyID: galaxyID,
-              galaxyName: catalogue[galaxyID].galaxyName
-            }
-          })
-        )
-      }
+      res = res.concat(
+        current.systems.filter(s => s !== undefined).map(s => {
+          const rid = s.glyphs.slice(4)
+          return {...s, 
+            cx: centerX - oriX, 
+            cy: centerY - oriY, 
+            cz: centerZ - oriZ,
+            regionID: rid,
+            regionName: catalogue[galaxyID].regions[rid].regionName,
+            regionLY: catalogue[galaxyID].regions[rid].ly,
+            galaxyID: galaxyID,
+            galaxyName: catalogue[galaxyID].galaxyName
+          }
+        })
+      )
       return res
     }, [])
   }
