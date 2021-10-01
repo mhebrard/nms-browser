@@ -11,20 +11,17 @@ import { collapseTooltip, setNode } from '../tooltip/tooltipSlices'
 
 export function Region() {
   const dispatch = useDispatch()
-  // Get systems data
-  // const systems = useSelector(getRegionSpecificSystemList)
-  const systems = useSelector(getNeighbourRegionSystemList)
-  const nodes = systems.map(d => { return {...d, id: d.glyphs}} )
-  dispatch(setSystems(systems))
-  // const distances = useSelector(getRegionSpecificDistancesList)
-  const distances = useSelector(getNeighbourRegionDistancesList)
-  const links = distances.map(d => { return {...d} })
-
-  // console.log('distances', distances)
   const regionID = useSelector(getRegionID)
   const category = useSelector(getCategory)
   const scale = 10
   const distance = 120;
+
+  // Get systems data
+  const systems = useSelector(getNeighbourRegionSystemList)
+  const nodes = systems.map(d => { return {...d, id: d.glyphs}} )
+  dispatch(setSystems(systems))
+  const distances = useSelector(getNeighbourRegionDistancesList)
+  const links = distances.map(d => { return {...d, visible: false} })
   
   // Create Object
   function objectHandler(n) {
@@ -42,7 +39,7 @@ export function Region() {
     // add img sprite as child
     const material = new THREE.SpriteMaterial(
       { 
-        color: n.regionID === regionID ? COLORS[n[category]] || '#ffffff' : '#800080',
+        color: n.regionID === regionID ? COLORS[n[category]] || '#ffffff' : '#cccccc',
         map: circle
       }
     );
@@ -55,10 +52,16 @@ export function Region() {
 
   // Display tooltip
   function onClickHandler(n, ref) {
-    // console.log('click on', n)
-    // console.log('onClickHandler',n['PC']['Normal'].name, '-', n.region, '<>',region, '-', n.region === region ? COLORS[n[category]] || 'uncharted' : 'outRegion',)
-    // console.log('camera', ref.current.cameraPosition())
+    // Display tooltip
     dispatch(setNode(systems.filter(d => d.glyphs === n.glyphs)[0]))
+
+    // Display links
+    links.forEach(l => {
+      l.visible = (n.glyphs == l.source.glyphs) || (n.glyphs == l.target.glyphs)
+    })
+
+    // Redraw
+    ref.current.refresh()
   }
 
   // Move toward node
@@ -74,6 +77,10 @@ export function Region() {
       3000  // ms transition duration
     );
   }
+
+  // function onHoverHandler(n, ref) {
+  //   console.log('onHoverHandler')
+  // }
 
   // Graph
   const Graph = () => {
@@ -108,9 +115,13 @@ export function Region() {
         nodes: nodes,
         links: links
       }}
+      // autoPauseRedraw={false}
       nodeThreeObject={n => objectHandler(n)}
       enableNodeDrag={false}
-      linkVisibility={true}
+      linkVisibility={l => l.visible}
+      linkWidth={1}
+      linkDirectionalParticles={4}
+      linkDirectionalParticleWidth={2}
       nodeLabel={n => n.name || n.originalName || '[unknown]' }
       // onNodeHover={n => onHoverHandler(n, ref)}
       onNodeClick={n => onClickHandler(n, ref)}

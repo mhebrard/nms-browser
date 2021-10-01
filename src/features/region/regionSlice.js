@@ -4,15 +4,15 @@ import { getGalaxyID, getRegionID } from '../menu/menuSlice';
 import { getCatalogue, getDistances } from '../startup/startupSlice';
 
 export const regionSlice = createSlice({
- name: 'region',
- initialState: {
-   systems: []
- },
- reducers: {
-   setSystems: (state, action) => {
-     state.systems = action.payload
-   }
- }
+  name: 'region',
+  initialState: {
+    systems: []
+  },
+  reducers: {
+    setSystems: (state, action) => {
+      state.systems = action.payload
+    }
+  }
 })
 
 // Actions
