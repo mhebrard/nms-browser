@@ -61,6 +61,9 @@ export const getGalaxySpecificRegionList = createSelector(
         return {
           name: regions[k].regionName,
           id: k,
+          cx: regions[k].cx,
+          cy: regions[k].cy,
+          cz: regions[k].cz,
           systemCount: regions[k].systems.filter(s => s !== undefined).length
         }
       }).sort((a, b) => a.name.localeCompare(b.name))

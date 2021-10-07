@@ -28,7 +28,7 @@ export function Menu() {
         AGT NAVI v0.6.0:
       </div>
       <div>
-        <img src={img_galaxy} alt='galaxy' />
+        <img src={img_galaxy} alt='galaxy' onClick={e => galaxyID > 0 ? dispatch(changeGalaxy(galaxyID)): null } />
         Galaxy: 
         <select
           name='galaxy'
@@ -42,7 +42,7 @@ export function Menu() {
         </select>
       </div>
       <div>
-        <img/>
+        <img onClick={e => regionID.length > 0 ? dispatch(changeRegion(regionID)) : null } />
         Region:
         <select
           name='region'

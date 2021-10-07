@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { isCollapse, getPosition, getNode, toggle} from './tooltipSlices';
+import { isCollapse, getNode, toggle} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 // import img_logo from '../../img/logo/png';

@@ -60,7 +60,7 @@ function loadCatalogue(url) {
           if (r[keyMap['Original Sys Name']] !== '') { system.originalName = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Galactic Coordinates']] !== '') { system.coordinates = r[keyMap['Galactic Coordinates']] }
           if (r[keyMap['Glyph Code']] !== '') { system.glyphs = r[keyMap['Glyph Code']] }
-          if (r[keyMap['Discovery Date']] !== '') {
+          if (r[keyMap['Discovered by']] !== '') {
             const prevDisco = system.dicoveryDate !== undefined ? new Date(system.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
             const currDisco = r[keyMap['Discovery Date']] !== '' ? new Date(r[keyMap['Discovery Date']]).setHours(0, 0, 0, 0) : new Date(0)
             if (system.discoveryDate === undefined || (currDisco < prevDisco)) { // Dicovered earlier
@@ -68,9 +68,9 @@ function loadCatalogue(url) {
               system.discoveredBy = r[keyMap['Discovered by']]
             }
           }
-          if (r[keyMap['Survey Date']] !== '') {
+          if (r[keyMap['Source/Surveyor Name']] !== '') {
             system.surveyDate = r[keyMap['Survey Date']]
-            system.surveyedBy = r[keyMap['Source']]
+            system.surveyedBy = r[keyMap['Source/Surveyor Name']]
             system.release = r[keyMap['Release']]
           }
           if (r[keyMap['Civilized?']] !== '') { system.civilized = r[keyMap['Civilized?']] }
@@ -109,7 +109,7 @@ function loadCatalogue(url) {
           if (r[keyMap['Original Sys Name']] !== '' && system.originalName === undefined) { system.originalName = r[keyMap['Original Sys Name']] }
           if (r[keyMap['Galactic Coordinates']] !== '' && system.coordinates === undefined) { system.coordinates = r[keyMap['Galactic Coordinates']] }
           if (r[keyMap['Glyph Code']] !== '' && system.glyphs === undefined) { system.glyphs = r[keyMap['Glyph Code']] }
-          if (r[keyMap['Discovery Date']] !== '') {
+          if (r[keyMap['Discovered by']] !== '') {
             const prevDisco = system.discoveryDate !== undefined ? new Date(system.discoveryDate).setHours(0, 0, 0, 0) : new Date(0)
             const currDisco = r[keyMap['Discovery Date']] !== '' ? new Date(r[keyMap['Discovery Date']]).setHours(0, 0, 0, 0) : new Date(0)
             if (system.discoveryDate === undefined || (currDisco < prevDisco)) { // Dicovered earlier
@@ -190,6 +190,7 @@ export const loadData = () => dispatch => {
     dispatch(setCatalogue(data[0]))
     dispatch(setDistances(data[1].concat(data[2])))
     dispatch(setStatus('Full'))
+    dispatch(setGalaxyID(data[0][1].galaxyID))
   })
   .catch(err => {
     console.log(err)

@@ -4,8 +4,7 @@ export const tooltipSlice = createSlice({
   name: 'tooltip',
   initialState: {
     collapse: true,
-    node: '',
-    position: {x:0, y:0}
+    node: ''
   },
   reducers: {
     toggle: (state, action) => {
@@ -14,9 +13,6 @@ export const tooltipSlice = createSlice({
     setNode: (state, action) => {
       state.node = action.payload
     },
-    setPosition: (state, action) => {
-      state.position = action.payload
-    },
     collapseTooltip: (state, action) => {
       state.collapse = true
     }
@@ -24,7 +20,7 @@ export const tooltipSlice = createSlice({
 })
 
 //Actions
-export const {toggle, setNode, setPosition, collapseTooltip} = tooltipSlice.actions
+export const {toggle, setNode, collapseTooltip} = tooltipSlice.actions
 
 // Selectors 
 export const isCollapse = state => state.tooltip.collapse;
