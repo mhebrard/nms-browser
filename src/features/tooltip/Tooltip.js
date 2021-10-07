@@ -174,8 +174,8 @@ export function Tooltip() {
       <div><img src={img_war} alt="conflict" />Confict: {node.conflict} ({node.conflictLevel})</div>
       <div><img/>Discovered by {node.discoveredBy || '?'}</div>
       <div><img/>Discovered on {node.discoveryDate || '?'}</div>
-      <div><img/>Surveyed by {node.surveyedBy}</div>
-      <div><img/>Surveyed on {node.surveyDate}</div>
+      <div><img/>Surveyed by {node.surveyedBy || '?'}</div>
+      <div><img/>Surveyed on {node.surveyDate || '?'}</div>
       <div><img/>Release: {node.release}</div>
       <div><img/>Civ: {node.civilized}</div>
     </div>
