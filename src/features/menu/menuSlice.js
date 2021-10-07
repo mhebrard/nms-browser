@@ -7,6 +7,7 @@ export const menuSlice = createSlice({
   name: 'menu',
   initialState: {
     galaxyID: 0,
+    galaxyQuery: '',
     regionID: '',
     category: CATEGORIES.star,
     collapse: true
@@ -14,6 +15,9 @@ export const menuSlice = createSlice({
   reducers: {
     setGalaxyID: (state, action) => {
       state.galaxyID = action.payload
+    },
+    setGalaxyQuery: (state, action) => {
+      state.galaxyQuery = action.payload
     },
     setRegionID: (state, action) => {
       state.regionID = action.payload
@@ -31,10 +35,11 @@ export const menuSlice = createSlice({
 });
 
 // Actions
-export const { setGalaxyID, setRegionID, setCategory, toggle, collapseMenu} = menuSlice.actions;
+export const { setGalaxyID, setGalaxyQuery, setRegionID, setCategory, toggle, collapseMenu} = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;
+export const getGalaxyQuery = state => state.menu.galaxyQuery;
 export const getRegionID = state => state.menu.regionID;
 export const getCategory = state => state.menu.category;
 export const isCollapse = state => state.menu.collapse;

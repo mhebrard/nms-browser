@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getGalaxyID, getGalaxyList, getRegionID, getGalaxySpecificRegionList, isCollapse, toggle} from './menuSlice';
+import { getGalaxyID, getGalaxyQuery, getGalaxyList, getRegionID, getGalaxySpecificRegionList, isCollapse, toggle, setGalaxyQuery} from './menuSlice';
 import { changeGalaxy, changeRegion } from '../../chains';
 import styles from './Menu.module.css';
 
@@ -10,6 +10,7 @@ import img_galaxy from '../../img/GALAXYMAP.png';
 export function Menu() {
   const dispatch = useDispatch()
   const galaxyID = useSelector(getGalaxyID)
+  const galaxyQuery = useSelector(getGalaxyQuery)
   const galaxyList = useSelector(getGalaxyList)
   const regionID = useSelector(getRegionID)
   const regionList = useSelector(getGalaxySpecificRegionList)
@@ -30,7 +31,19 @@ export function Menu() {
       <div>
         <img src={img_galaxy} alt='galaxy' onClick={e => galaxyID > 0 ? dispatch(changeGalaxy(galaxyID)): null } />
         Galaxy: 
-        <select
+        <input type="text" id="galaxy" name="galaxy"
+          value={galaxyQuery}
+          onChange={e => dispatch(setGalaxyQuery(e.target.value))}
+          placeholder="..."
+          />
+        <div id="galaxyList">
+          <ul>
+            {galaxyList.filter(f => f.name.startsWith(galaxyQuery)).map(g => {
+              return <li key={g.id} onClick={e => dispatch(changeGalaxy(g.id))}>{g.id} - {g.name} ({g.regionCount})</li>
+            })}
+          </ul>
+        </div>
+        {/* <select
           name='galaxy'
           value={galaxyID}
           onChange={e => dispatch(changeGalaxy(e.target.value))}
@@ -39,7 +52,7 @@ export function Menu() {
           {galaxyList.map(g => {
             return <option key={g.id} value={g.id}>{g.id} - {g.name} ({g.regionCount})</option>
           })}
-        </select>
+        </select> */}
       </div>
       <div>
         <img onClick={e => regionID.length > 0 ? dispatch(changeRegion(regionID)) : null } />
