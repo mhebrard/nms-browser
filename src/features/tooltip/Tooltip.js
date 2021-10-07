@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { isCollapse, getPosition, getNode, toggle} from './tooltipSlices';
+import { isCollapse, getNode, toggle} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 // import img_logo from '../../img/logo/png';
@@ -174,8 +174,8 @@ export function Tooltip() {
       <div><img src={img_war} alt="conflict" />Confict: {node.conflict} ({node.conflictLevel})</div>
       <div><img/>Discovered by {node.discoveredBy || '?'}</div>
       <div><img/>Discovered on {node.discoveryDate || '?'}</div>
-      <div><img/>Surveyed by {node.surveyedBy}</div>
-      <div><img/>Surveyed on {node.surveyDate}</div>
+      <div><img/>Surveyed by {node.surveyedBy || '?'}</div>
+      <div><img/>Surveyed on {node.surveyDate || '?'}</div>
       <div><img/>Release: {node.release}</div>
       <div><img/>Civ: {node.civilized}</div>
     </div>

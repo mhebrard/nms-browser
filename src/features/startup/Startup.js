@@ -9,6 +9,7 @@ import { Menu } from '../menu/Menu'
 import { Galaxy } from '../galaxy/Galaxy'
 import { Region } from '../region/Region'
 import { Tooltip } from '../tooltip/Tooltip'
+import { GalaxyInfo } from '../galaxyinfo/GalaxyInfo'
 import { AGT } from '../three/AGT'
 
 function Loadmsg() {
@@ -41,25 +42,26 @@ export function Startup() {
 
   return (
     <div className={styles.container} >
-      { status === "Region" 
-         ? <Region/> 
-         : <Canvas style={{ background: '#000000' }}>
+      {/* THREE Content */}
+      { status === "NoData" | status === "Loading" 
+        ? <Canvas style={{ background: '#000000' }}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
-            { status === "NoData" || status === "Full" || status === "Loading"
-              ? <AGT position={[0,0,0]} dispatch={dispatch} active={status === "Loading"} />
-              : null
-            }
-          </Canvas>
+            <AGT position={[0,0,0]} dispatch={dispatch} active={status === "Loading"} />
+          </Canvas> 
+        : null
       }
-      {/* Overlay HTML */}
+      { status === "Full" || status === "Galaxy" ? <Galaxy/> : null }
+      { status === "Region" ? <Region/> : null }
+      
+      {/* HTML Overlay */}
       <div className={styles.status}>{status}</div>
       {status === "NoData" ? <Loadmsg/> : null}
       {status === "Loading" ? <Waitmsg/> : null}
       {status === "Full" ? <Menumsg/> : null}
       {status === "Full" || status === "Galaxy" || status === "Region" ? <Menu/> : null}
-      {status === "Galaxy" || status === "Region" ? <Tooltip /> : null}
-      {status === "Galaxy" ? <Galaxy/> : null}
+      {status === "Full" || status === "Galaxy" ? <GalaxyInfo /> : null}
+      {status === "Region" ? <Tooltip /> : null}
     </div>
   )
 }
