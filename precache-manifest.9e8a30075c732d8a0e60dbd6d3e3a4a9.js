@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "94deb02d586ebe01ce08ffc785b1a211",
+    "revision": "adf06bf67d11161633bcda2565f371d5",
     "url": "/nms-browser/index.html"
   },
   {
-    "revision": "dc1c5875de4219c5a0c3",
+    "revision": "a3902dd265382a10eaa3",
     "url": "/nms-browser/static/css/main.40183c98.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/nms-browser/static/js/2.9f01b239.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "dc1c5875de4219c5a0c3",
-    "url": "/nms-browser/static/js/main.42e2e372.chunk.js"
+    "revision": "a3902dd265382a10eaa3",
+    "url": "/nms-browser/static/js/main.cf195c94.chunk.js"
   },
   {
     "revision": "0903f199b1a5590c6106",
