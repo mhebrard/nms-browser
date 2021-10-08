@@ -4,10 +4,14 @@ import { isCollapse, getNode, toggle} from './tooltipSlices';
 import styles from './Tooltip.module.css';
 
 // import img_logo from '../../img/logo/png';
-import img_galaxy from '../../img/GALAXYMAP.png';
+// import img_galaxy from '../../img/GALAXYMAP.png';
 import img_glyph_0 from '../../img/PORTALSYMBOL.0.png';
 import img_glyph_5 from '../../img/PORTALSYMBOL.5.png';
+import img_glyph_9 from '../../img/PORTALSYMBOL.9.png';
 import img_glyph_A from '../../img/PORTALSYMBOL.A.png';
+import img_glyph_C from '../../img/PORTALSYMBOL.C.png';
+import img_glyph_D from '../../img/PORTALSYMBOL.D.png';
+import img_glyph_E from '../../img/PORTALSYMBOL.E.png';
 
 import img_yellow from '../../img/star_yellow.png';
 import img_red from '../../img/star_red.png';
@@ -19,6 +23,8 @@ import img_cross from '../../img/SYSTEM.CROSS.png';
 import img_gek from '../../img/RACE.GEK.png';
 import img_korvax from '../../img/RACE.KORVAX.png';
 import img_vykeen from '../../img/RACE.VYKEEN.png';
+import img_traveller from '../../img/RACE.TRAVELLER.png';
+import img_anomaly from '../../img/RACE.ANOMALY.png';
 import img_materials from '../../img/ECONOMY.FUSION.png';
 import img_technology from '../../img/ECONOMY.HIGHTECH.png';
 import img_manufacturing from '../../img/ECONOMY.MANUFACTURING.png';
@@ -41,7 +47,7 @@ export function Tooltip() {
   const collapsed = useSelector(isCollapse)
 
   let img_color = img_yellow
-  let img_race = img_default
+  let img_race = img_traveller
   let img_eco = img_default
   let img_war = img_rank0
   let img_wealth = img_rank0
@@ -158,7 +164,7 @@ export function Tooltip() {
       }}
       onClick={e => dispatch(toggle())}
       >
-      <div><img src={img_galaxy} alt="galaxy"/>Galaxy: {node.galaxyName}</div>
+      <div><img src={img_glyph_9} alt="galaxy"/>Galaxy: {node.galaxyName}</div>
       <div><img/>Region: {node.regionName}</div>
       <div><img/>Original: {node.originalName || '[unknown]'} </div>
       <div><img/>System: {node.name || '[unknown]'}</div>
@@ -172,12 +178,12 @@ export function Tooltip() {
       <div><img/>Wealth: {node.wealth} ({node.wealthLevel})</div>
       <div><img/>Buy: {node.buy}% - Sell: {node.sell}%</div>
       <div><img src={img_war} alt="conflict" />Confict: {node.conflict} ({node.conflictLevel})</div>
-      <div><img/>Discovered by {node.discoveredBy || '?'}</div>
-      <div><img/>Discovered on {node.discoveryDate || '?'}</div>
-      <div><img/>Surveyed by {node.surveyedBy || '?'}</div>
-      <div><img/>Surveyed on {node.surveyDate || '?'}</div>
-      <div><img/>Release: {node.release}</div>
-      <div><img/>Civ: {node.civilized}</div>
+      <div><img src={img_anomaly} alt="discovered" />Discovered by {node.discoveredBy || '?'}</div>
+      <div><img src={img_glyph_D} alt="discovered" />Discovered on {node.discoveryDate || '?'}</div>
+      <div><img src={img_anomaly} alt="survey" />Surveyed by {node.surveyedBy || '?'}</div>
+      <div><img src={img_glyph_D} alt="survey" />Surveyed on {node.surveyDate || '?'}</div>
+      <div><img src={img_glyph_E} alt="release" />Release: {node.release}</div>
+      <div><img src={img_glyph_C} alt="civ" />Civ: {node.civilized}</div>
     </div>
   )
 }
