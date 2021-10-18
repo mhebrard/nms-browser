@@ -23,7 +23,7 @@ function Loadmsg() {
 function Waitmsg() {
   return (
     <div className={styles.msg}>
-      Please wait, data are loading in the background
+      Please wait while data is loading in the background
     </div>
   )
 }
