@@ -1,5 +1,5 @@
 import { setCatalogue, setDistances, setStatus } from './features/startup/startupSlice'
-import { setGalaxyID, setGalaxyQuery, setRegionID } from './features/menu/menuSlice'
+import { setGalaxyID, setGalaxyQuery, setRegionID, setRegionQuery } from './features/menu/menuSlice'
 import { CATALOGUE, INTERREGION, INTRAREGION } from './data/assets'
 import * as d3 from './d3-bundle';
 
@@ -213,9 +213,11 @@ export const changeGalaxy = g => dispatch => {
   dispatch(setStatus('Galaxy'))
 }
 
-export const changeRegion = regionID => dispatch => {
-  // Display galaxy scene
-  dispatch(setStatus('Region'))
+export const changeRegion = r => dispatch => {
   // Set Menu
-  dispatch(setRegionID(regionID))
+  dispatch(setRegionID(r.id))
+  // Set choice
+  dispatch(setRegionQuery(`${r.id} - ${r.name} (${r.systemCount})`))
+  // Display scene
+  dispatch(setStatus('Region'))
 }
