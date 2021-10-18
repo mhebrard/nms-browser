@@ -34,15 +34,18 @@ export function Menu() {
         <input type="text" id="galaxy" name="galaxy"
           value={galaxyQuery}
           onChange={e => dispatch(setGalaxyQuery(e.target.value))}
-          placeholder="..."
-          />
-        <div id="galaxyList">
-          <ul>
-            {galaxyList.filter(f => f.name.startsWith(galaxyQuery)).map(g => {
-              return <li key={g.id} onClick={e => dispatch(changeGalaxy(g.id))}>{g.id} - {g.name} ({g.regionCount})</li>
-            })}
-          </ul>
-        </div>
+        />
+      </div>
+      <div id="galaxyList" className={styles.choices}
+        style={{
+          display: galaxyList.filter(f => f.name.startsWith(galaxyQuery)).length > 0 ? 'block' : 'none'
+        }}>
+        <ul>
+          {galaxyList.filter(f => f.name.startsWith(galaxyQuery)).map(g => {
+            return <li key={g.id} onClick={e => dispatch(changeGalaxy(g))}>{g.id} - {g.name} ({g.regionCount})</li>
+          })}
+        </ul>
+      </div>
         {/* <select
           name='galaxy'
           value={galaxyID}
@@ -53,7 +56,6 @@ export function Menu() {
             return <option key={g.id} value={g.id}>{g.id} - {g.name} ({g.regionCount})</option>
           })}
         </select> */}
-      </div>
       <div>
         <img onClick={e => regionID.length > 0 ? dispatch(changeRegion(regionID)) : null } />
         Region:

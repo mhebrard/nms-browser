@@ -1,5 +1,5 @@
 import { setCatalogue, setDistances, setStatus } from './features/startup/startupSlice'
-import { setGalaxyID, setRegionID } from './features/menu/menuSlice'
+import { setGalaxyID, setGalaxyQuery, setRegionID } from './features/menu/menuSlice'
 import { CATALOGUE, INTERREGION, INTRAREGION } from './data/assets'
 import * as d3 from './d3-bundle';
 
@@ -190,7 +190,12 @@ export const loadData = () => dispatch => {
     dispatch(setCatalogue(data[0]))
     dispatch(setDistances(data[1].concat(data[2])))
     dispatch(setStatus('Full'))
-    dispatch(setGalaxyID(data[0][1].galaxyID))
+    // Set Galaxy
+    const g = data[0][1]
+    dispatch(setGalaxyID(g.galaxyID))
+    dispatch(setGalaxyQuery(`${g.galaxyID} - ${g.galaxyName} (${Object.keys(g.regions).length})`))
+    dispatch(setStatus('Galaxy'))
+    
   })
   .catch(err => {
     console.log(err)
@@ -198,11 +203,14 @@ export const loadData = () => dispatch => {
   })
 }
 
-export const changeGalaxy = galaxyID => dispatch => {
+export const changeGalaxy = g => dispatch => {
+  console.log('chain/changeGalaxy', g)
+  // Set Menu
+  dispatch(setGalaxyID(g.id))
+  // Set choice
+  dispatch(setGalaxyQuery(`${g.id} - ${g.name} (${g.regionCount})`))
   // Display galaxy scene
   dispatch(setStatus('Galaxy'))
-  // Set Menu
-  dispatch(setGalaxyID(galaxyID))
 }
 
 export const changeRegion = regionID => dispatch => {
