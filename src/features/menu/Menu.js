@@ -16,6 +16,10 @@ export function Menu() {
   const regionList = useSelector(getGalaxySpecificRegionList)
   const collapsed = useSelector(isCollapse)
 
+  const galaxyMatches = galaxyList.filter(f => 
+    f.id.startsWith(galaxyQuery) || f.name.includes(galaxyQuery) 
+  )
+
   return (
     <div
       className={[styles.sidenav, styles.tronbox, styles.content].join(" ")}
@@ -38,24 +42,14 @@ export function Menu() {
       </div>
       <div id="galaxyList" className={styles.choices}
         style={{
-          display: galaxyList.filter(f => f.name.startsWith(galaxyQuery)).length > 0 ? 'block' : 'none'
+          display: galaxyMatches.length > 0 ? 'block' : 'none'
         }}>
         <ul>
-          {galaxyList.filter(f => f.name.startsWith(galaxyQuery)).map(g => {
+          {galaxyMatches.map(g => {
             return <li key={g.id} onClick={e => dispatch(changeGalaxy(g))}>{g.id} - {g.name} ({g.regionCount})</li>
           })}
         </ul>
       </div>
-        {/* <select
-          name='galaxy'
-          value={galaxyID}
-          onChange={e => dispatch(changeGalaxy(e.target.value))}
-        >
-          <option value=''>--Select--</option>
-          {galaxyList.map(g => {
-            return <option key={g.id} value={g.id}>{g.id} - {g.name} ({g.regionCount})</option>
-          })}
-        </select> */}
       <div>
         <img onClick={e => regionID.length > 0 ? dispatch(changeRegion(regionID)) : null } />
         Region:
