@@ -1,19 +1,42 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getGalaxyID, getGalaxyList, getRegionID, getGalaxySpecificRegionList, isCollapse, toggle} from './menuSlice';
-import { changeGalaxy, changeRegion } from '../../chains';
+import { getGalaxyQuery, getGalaxyList, getRegionQuery, getGalaxySpecificRegionList, getSystemQuery, isCollapse, toggle, setGalaxyQuery, setRegionQuery, setSystemQuery, getRegionID} from './menuSlice';
+import { changeGalaxy, changeRegion, changeSystem } from '../../chains';
 import styles from './Menu.module.css';
 
 import img_logo from '../../img/logo.png';
 import img_galaxy from '../../img/GALAXYMAP.png';
+import { getSystems } from '../region/regionSlice';
 
 export function Menu() {
   const dispatch = useDispatch()
-  const galaxyID = useSelector(getGalaxyID)
+  const galaxyQuery = useSelector(getGalaxyQuery)
   const galaxyList = useSelector(getGalaxyList)
   const regionID = useSelector(getRegionID)
+  const regionQuery = useSelector(getRegionQuery)
   const regionList = useSelector(getGalaxySpecificRegionList)
   const collapsed = useSelector(isCollapse)
+  const systemQuery = useSelector(getSystemQuery)
+  const systemList = useSelector(getSystems)
+
+  const galaxyMatches = galaxyList.filter(f => 
+    f.id.startsWith(galaxyQuery) // ID
+    || f.name.toLowerCase().includes(galaxyQuery.toLowerCase()) // Name (case insensitive)
+  ).slice(0, 10) // Limit 10
+
+  const regionMatches = regionList.filter(f => 
+    f.id.startsWith(regionQuery) // Glyphs
+    || f.name.toLowerCase().includes(regionQuery.toLowerCase()) // Name (case insensitive)
+  ).slice(0, 10) // Limit 10
+
+  const systemMatches = systemList.filter(f =>
+    f.regionID == regionID // Filter region only (exclude Neighbour)
+    && ( 
+      f.glyphs.startsWith(systemQuery) // Glyphs
+      || ( f.ssi && f.ssi.toString().startsWith(systemQuery) ) // SSI
+      || ( f.name && f.name.toLowerCase().includes(systemQuery.toLowerCase()) ) // Name (case insensitive)
+    )
+  ).slice(0, 10) // Limit 10
 
   return (
     <div
@@ -28,32 +51,58 @@ export function Menu() {
         AGT NAVI v0.6.0:
       </div>
       <div>
-        <img src={img_galaxy} alt='galaxy' onClick={e => galaxyID > 0 ? dispatch(changeGalaxy(galaxyID)): null } />
+        <img src={img_galaxy} alt='galaxy' onClick={e => galaxyMatches.length > 0 ? dispatch(changeGalaxy(galaxyMatches[0])): null } />
         Galaxy: 
-        <select
-          name='galaxy'
-          value={galaxyID}
-          onChange={e => dispatch(changeGalaxy(e.target.value))}
-        >
-          <option value=''>--Select--</option>
-          {galaxyList.map(g => {
-            return <option key={g.id} value={g.id}>{g.id} - {g.name} ({g.regionCount})</option>
+        <input type="text"
+          value={galaxyQuery}
+          onChange={e => dispatch(setGalaxyQuery(e.target.value))}
+        />
+      </div>
+      <div id="galaxyList" className={styles.choices}
+        style={{
+          display: galaxyQuery.length > 0 && galaxyMatches.length > 0 ? 'block' : 'none'
+        }}>
+        <ul>
+          {galaxyMatches.map(g => {
+            return <li key={g.id} onClick={e => dispatch(changeGalaxy(g))}>{g.id} - {g.name} ({g.regionCount})</li>
           })}
-        </select>
+        </ul>
       </div>
       <div>
-        <img onClick={e => regionID.length > 0 ? dispatch(changeRegion(regionID)) : null } />
+        <img onClick={e => regionMatches.length > 0 ? dispatch(changeRegion(regionMatches[0])) : null } />
         Region:
-        <select
-          name='region'
-          value={regionID}
-          onChange={e => dispatch(changeRegion(e.target.value))}
-        >
-          <option value=''>--Select--</option>
-          {regionList.map(r => {
-            return <option key={r.id} value={r.id}>{r.name} ({r.systemCount})</option>
+        <input type="text"
+          value={regionQuery}
+          onChange={e => dispatch(setRegionQuery(e.target.value))}
+        />
+      </div>
+      <div id="regionList" className={styles.choices}
+        style={{
+          display: regionQuery.length > 0 && regionMatches.length > 0 ? 'block' : 'none'
+        }}>
+        <ul>
+          {regionMatches.map(r => {
+            return <li key={r.id} onClick={e => dispatch(changeRegion(r))}>{r.name} ({r.systemCount}) [{r.id}]</li>
           })}
-        </select>
+        </ul>
+      </div>
+      <div>
+        <img />
+        System:
+        <input type="text"
+          value={systemQuery}
+          onChange={e => dispatch(setSystemQuery(e.target.value))}
+        />
+      </div>
+      <div id="systemList" className={styles.choices}
+        style={{
+          display: systemQuery.length > 0 && systemMatches.length > 0 ? 'block' : 'none'
+        }}>
+        <ul>
+          {systemMatches.map(s => {
+            return <li key={s.glyphs} onClick={e => dispatch(changeSystem(s))} >{s.name} ({s.ssi}) [{s.glyphs}]</li>
+          })}
+        </ul>
       </div>
     </div>
   )

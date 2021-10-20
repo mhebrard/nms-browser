@@ -24,7 +24,6 @@ export function GalaxyInfo() {
       <div><img/>Cluster: {node.name}</div>
       <div><img/>Region list: </div>
       <div>
-        <div></div>
         <ul>
         {node && node.regions 
           ? node.regions.map(r => {
