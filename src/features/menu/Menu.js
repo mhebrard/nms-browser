@@ -67,7 +67,7 @@ export function Menu() {
         }}>
         <ul>
           {regionMatches.map(r => {
-            return <li key={r.id} onClick={e => dispatch(changeRegion(r))}>{r.id} - {r.name} ({r.systemCount})</li>
+            return <li key={r.id} onClick={e => dispatch(changeRegion(r))}>{r.name} ({r.systemCount}) [{r.id}]</li>
           })}
         </ul>
       </div>

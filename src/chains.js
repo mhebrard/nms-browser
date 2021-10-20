@@ -217,7 +217,7 @@ export const changeRegion = r => dispatch => {
   // Set Menu
   dispatch(setRegionID(r.id))
   // Set choice
-  dispatch(setRegionQuery(`${r.id} - ${r.name} (${r.systemCount})`))
+  dispatch(setRegionQuery(`${r.name} (${r.systemCount}) [${r.id}]`))
   // Display scene
   dispatch(setStatus('Region'))
 }
