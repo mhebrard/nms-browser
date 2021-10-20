@@ -27,7 +27,7 @@ export function GalaxyInfo() {
         <ul>
         {node && node.regions 
           ? node.regions.map(r => {
-            return <li key={r.id} onClick={e => dispatch(changeRegion(r.id))}>{r.name}</li>
+            return <li key={r.id} onClick={e => dispatch(changeRegion(r))}>{r.name} ({r.systemCount}) [{r.id}]</li>
           })
           : null
         }
