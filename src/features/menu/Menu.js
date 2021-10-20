@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getGalaxyQuery, getGalaxyList, getRegionQuery, getGalaxySpecificRegionList, getSystemQuery, isCollapse, toggle, setGalaxyQuery, setRegionQuery, setSystemQuery, getRegionID} from './menuSlice';
-import { changeGalaxy, changeRegion } from '../../chains';
+import { changeGalaxy, changeRegion, changeSystem } from '../../chains';
 import styles from './Menu.module.css';
 
 import img_logo from '../../img/logo.png';
@@ -100,9 +100,7 @@ export function Menu() {
         }}>
         <ul>
           {systemMatches.map(s => {
-            return <li key={s.glyphs} 
-            // onClick={e => dispatch(changeSystem(s))}
-            >{s.name} ({s.ssi}) [{s.glyphs}]</li>
+            return <li key={s.glyphs} onClick={e => dispatch(changeSystem(s))} >{s.name} ({s.ssi}) [{s.glyphs}]</li>
           })}
         </ul>
       </div>
