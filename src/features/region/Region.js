@@ -85,6 +85,7 @@ export function Region() {
   // Graph
   const Graph = () => {
     const ref = useRef();
+
     useEffect(() => {
       // Bloom pass
       const bloomPass = new THREE.UnrealBloomPass();
@@ -104,9 +105,8 @@ export function Region() {
       ref.current.cameraPosition(
         { x: 0, y: 0, z: distance*scale }, // new position
         { x:0, y:0, z:0}, // lookAt ({ x, y, z })
-        3000  // ms transition duration
+        // 3000  // ms transition duration
       );
-      
     }, [])
 
     return <ForceGraph3D
