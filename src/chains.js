@@ -1,5 +1,6 @@
 import { setCatalogue, setDistances, setStatus } from './features/startup/startupSlice'
-import { setGalaxyID, setGalaxyQuery, setRegionID, setRegionQuery } from './features/menu/menuSlice'
+import { setGalaxyID, setGalaxyQuery, setRegionID, setRegionQuery, setSystemID, setSystemQuery } from './features/menu/menuSlice'
+import { setNode } from './features/tooltip/tooltipSlices'
 import { CATALOGUE, INTERREGION, INTRAREGION } from './data/assets'
 import * as d3 from './d3-bundle';
 
@@ -220,4 +221,15 @@ export const changeRegion = r => dispatch => {
   dispatch(setRegionQuery(`${r.name} (${r.systemCount}) [${r.id}]`))
   // Display scene
   dispatch(setStatus('Region'))
+}
+
+export const changeSystem = s => dispatch => {
+  // Set Menu
+  dispatch(setSystemID(s.glyphs))
+  // Set choice
+  dispatch(setSystemQuery(`${s.name} (${s.ssi}) [${s.glyphs}]`))
+  // Focus on System
+  dispatch(setNode(s))
+  // Move camera
+  // dispatch(setCamera(s))
 }

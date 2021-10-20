@@ -10,6 +10,8 @@ export const menuSlice = createSlice({
     galaxyQuery: '',
     regionID: '',
     regionQuery: '',
+    systemID: '',
+    systemQuery: '',
     category: CATEGORIES.star,
     collapse: true
   },
@@ -26,6 +28,12 @@ export const menuSlice = createSlice({
     setRegionQuery: (state, action) => {
       state.regionQuery = action.payload
     },
+    setSystemID: (state, action) => {
+      state.systemID = action.payload
+    },
+    setSystemQuery: (state, action) => {
+      state.systemQuery = action.payload
+    },
     setCategory: (state, action) => {
       state.category = action.payload;
     },
@@ -39,13 +47,15 @@ export const menuSlice = createSlice({
 });
 
 // Actions
-export const { setGalaxyID, setGalaxyQuery, setRegionID, setRegionQuery, setCategory, toggle, collapseMenu} = menuSlice.actions;
+export const { setGalaxyID, setGalaxyQuery, setRegionID, setRegionQuery, setSystemID, setSystemQuery, setCategory, toggle, collapseMenu} = menuSlice.actions;
 
 // Selectors
 export const getGalaxyID = state => state.menu.galaxyID;
 export const getGalaxyQuery = state => state.menu.galaxyQuery;
 export const getRegionID = state => state.menu.regionID;
 export const getRegionQuery = state => state.menu.regionQuery;
+export const getSystemID = state => state.menu.systemID;
+export const getSystemQuery = state => state.menu.systemQuery;
 export const getCategory = state => state.menu.category;
 export const isCollapse = state => state.menu.collapse;
 
