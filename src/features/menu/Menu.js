@@ -48,7 +48,7 @@ export function Menu() {
       >
       <div onClick={e => dispatch(toggle())}>
       <img src={img_logo} alt='logo' />
-        AGT NAVI v0.6.0:
+        AGT NAVI v0.8.0:
       </div>
       <div>
         <img src={img_galaxy} alt='galaxy' onClick={e => galaxyMatches.length > 0 ? dispatch(changeGalaxy(galaxyMatches[0])): null } />

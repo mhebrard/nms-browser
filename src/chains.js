@@ -205,7 +205,7 @@ export const loadData = () => dispatch => {
 }
 
 export const changeGalaxy = g => dispatch => {
-  console.log('chain/changeGalaxy', g)
+  // console.log('chain/changeGalaxy', g)
   // Set Menu
   dispatch(setGalaxyID(g.id))
   // Set choice
