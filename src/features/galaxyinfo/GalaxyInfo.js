@@ -4,7 +4,9 @@ import { changeRegion } from '../../chains.js';
 import { isCollapse, getNode, toggle} from './GalaxyInfoSlice';
 import styles from './GalaxyInfo.module.css';
 
-import img_galaxy from '../../img/GALAXYMAP.png';
+import img_glyph_9 from '../../img/PORTALSYMBOL.9.png';
+import img_glyph_A from '../../img/PORTALSYMBOL.A.png';
+import img_community from '../../img/SAVE.COMMUNITY.png';
 
 export function GalaxyInfo() {
   const dispatch = useDispatch()
@@ -20,14 +22,17 @@ export function GalaxyInfo() {
       }}
       onClick={e => dispatch(toggle())}
       >
-      <div><img src={img_galaxy} alt="galaxy"/>Galaxy: {node.galaxyName}</div>
-      <div><img/>Cluster: {node.name}</div>
-      <div><img/>Region list: </div>
-      <div>
+      <div><img src={img_glyph_9} alt="galaxy"/>Galaxy: {node.galaxyName}</div>
+      <div><img src={img_glyph_A} alt="cluster"/>Cluster: {node.name}</div>
+      <div><img src={img_community} alt="region"/>Region list: </div>
+      <div className={styles.choices}
+      style={{
+        display: node && node.regions.length > 0 ? 'block' : 'none'
+      }}>
         <ul>
         {node && node.regions 
           ? node.regions.map(r => {
-            return <li key={r.id} onClick={e => dispatch(changeRegion(r.id))}>{r.name}</li>
+            return <li key={r.id} onClick={e => dispatch(changeRegion(r))}>{r.name} ({r.systemCount}) [{r.id}]</li>
           })
           : null
         }
