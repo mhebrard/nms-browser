@@ -42,10 +42,20 @@ export const getRegionClusters = createSelector(
             z,
             galaxyID,
             galaxyName: catalogue[galaxyID].galaxyName,
-            regions: [], }
+            regions: [],
+            main: '',
+          }
         }
-        res[id].regions.push({id: k, name: regions[k].regionName})
-        res[id].name = `Cluster ${id}: ${res[id].regions.length} documented region(s)`
+        const systemCount = regions[k].systems.filter(s => s !== undefined).length
+        const region = {
+          id: k, 
+          name: regions[k].regionName, 
+          systemCount
+        }
+        res[id].regions.push(region)
+        // Check region with most systems to choose name
+        res[id].main = res[id].main && res[id].main.systemCount > systemCount ? res[id].main : region
+        res[id].name = `${res[id].main.name} Cluster (${res[id].regions.length})`
         return res
       }, {})
     } // and galaxyID
@@ -55,7 +65,7 @@ export const getRegionClusters = createSelector(
     const z = Math.round(2027 / lod)
     const id = `${x}_${y}_${z}`
     if (!clustersMap[id]) { clustersMap[id] = {id, x, y, z, regions: []} }
-    clustersMap[id].name = `Galaxy Center: ${clustersMap[id].regions.length} documented region(s)`
+    clustersMap[id].name = `Galaxy Center (${clustersMap[id].regions.length})`
 
     return Object.keys(clustersMap).map(k => clustersMap[k])
   }
