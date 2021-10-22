@@ -2,11 +2,13 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getGalaxyQuery, getGalaxyList, getRegionQuery, getGalaxySpecificRegionList, getSystemQuery, isCollapse, toggle, setGalaxyQuery, setRegionQuery, setSystemQuery, getRegionID} from './menuSlice';
 import { changeGalaxy, changeRegion, changeSystem } from '../../chains';
+import { getSystems } from '../region/regionSlice';
 import styles from './Menu.module.css';
 
 import img_logo from '../../img/logo.png';
-import img_galaxy from '../../img/GALAXYMAP.png';
-import { getSystems } from '../region/regionSlice';
+import img_glyph_9 from '../../img/PORTALSYMBOL.9.png';
+import img_community from '../../img/SAVE.COMMUNITY.png';
+import img_system from '../../img/STARSYSTEM.png';
 
 export function Menu() {
   const dispatch = useDispatch()
@@ -48,10 +50,10 @@ export function Menu() {
       >
       <div onClick={e => dispatch(toggle())}>
       <img src={img_logo} alt='logo' />
-        AGT NAVI v0.8.0:
+        AGT NAVI v0.8.1:
       </div>
       <div>
-        <img src={img_galaxy} alt='galaxy' onClick={e => galaxyMatches.length > 0 ? dispatch(changeGalaxy(galaxyMatches[0])): null } />
+        <img src={img_glyph_9} alt='galaxy' onClick={e => galaxyMatches.length > 0 ? dispatch(changeGalaxy(galaxyMatches[0])): null } />
         Galaxy: 
         <input type="text"
           value={galaxyQuery}
@@ -69,7 +71,7 @@ export function Menu() {
         </ul>
       </div>
       <div>
-        <img onClick={e => regionMatches.length > 0 ? dispatch(changeRegion(regionMatches[0])) : null } />
+        <img src={img_community} alt='region' onClick={e => regionMatches.length > 0 ? dispatch(changeRegion(regionMatches[0])) : null } />
         Region:
         <input type="text"
           value={regionQuery}
@@ -87,7 +89,7 @@ export function Menu() {
         </ul>
       </div>
       <div>
-        <img />
+        <img src={img_system} alt='system' />
         System:
         <input type="text"
           value={systemQuery}

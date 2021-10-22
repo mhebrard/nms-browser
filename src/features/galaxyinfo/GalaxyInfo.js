@@ -25,7 +25,10 @@ export function GalaxyInfo() {
       <div><img src={img_glyph_9} alt="galaxy"/>Galaxy: {node.galaxyName}</div>
       <div><img src={img_glyph_A} alt="cluster"/>Cluster: {node.name}</div>
       <div><img src={img_community} alt="region"/>Region list: </div>
-      <div>
+      <div className={styles.choices}
+      style={{
+        display: node && node.regions.length > 0 ? 'block' : 'none'
+      }}>
         <ul>
         {node && node.regions 
           ? node.regions.map(r => {
