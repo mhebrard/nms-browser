@@ -13,8 +13,9 @@ export function Region() {
   const dispatch = useDispatch()
   const regionID = useSelector(getRegionID)
   const category = useSelector(getCategory)
-  const scale = 10
-  const distance = 120;
+  const spriteScale = 10
+  const focusDistance = 120
+  const linkDistanceRatio = 2
 
   // Get systems data
   const systems = useSelector(getNeighbourRegionSystemList)
@@ -44,7 +45,7 @@ export function Region() {
       }
     );
     const sprite = new THREE.Sprite(material);
-    sprite.scale.set(scale, scale);
+    sprite.scale.set(spriteScale, spriteScale);
     obj.add(sprite);
   
     return obj;
@@ -69,7 +70,7 @@ export function Region() {
     // console.log('onRightClickHandler')
 
     // Aim at node from outside it
-    const distRatio = 1 + distance/Math.hypot(n.x, n.y, n.z);
+    const distRatio = 1 + focusDistance/Math.hypot(n.x, n.y, n.z);
   
     ref.current.cameraPosition(
       { x: n.x * distRatio, y: n.y * distRatio, z: n.z * distRatio }, // new position
@@ -89,21 +90,25 @@ export function Region() {
     useEffect(() => {
       // Bloom pass
       const bloomPass = new THREE.UnrealBloomPass();
-      bloomPass.strength = 3;
+      bloomPass.strength = 1.5;
       bloomPass.radius = 1;
       bloomPass.threshold = 0.1;
       ref.current.postProcessingComposer().addPass(bloomPass);
 
-      // Force distance
-      ref.current.d3Force('link').distance(n => n.distance);
-      // Force region
-      ref.current.d3Force('x', d3.forceX(n => n.cx*1000).strength(0.05));
-      ref.current.d3Force('y', d3.forceY(n => n.cy*1000).strength(0.05));
-      ref.current.d3Force('z', d3.forceZ(n => n.cz*1000).strength(0.05));
+      // Three forces are included by default: 
+      // 'link' (based on forceLink), 
+      ref.current.d3Force('link').distance(n => n.distance * linkDistanceRatio).strength(1);
+      // 'charge' (based on forceManyBody) 
+      ref.current.d3Force('charge').strength(0);
+      // 'center' (based on forceCenter).
+      ref.current.d3Force('center').strength(0);
+      ref.current.d3Force('x', d3.forceX(n => n.cx*1000*linkDistanceRatio).strength(0.005));
+      ref.current.d3Force('y', d3.forceY(n => n.cy*1000*linkDistanceRatio).strength(0.005));
+      ref.current.d3Force('z', d3.forceZ(n => n.cz*1000*linkDistanceRatio).strength(0.005));
 
       // Init camera position
       ref.current.cameraPosition(
-        { x: 0, y: 0, z: distance*scale }, // new position
+        { x: 0, y: 0, z: focusDistance*spriteScale }, // new position
         { x:0, y:0, z:0}, // lookAt ({ x, y, z })
         // 3000  // ms transition duration
       );
